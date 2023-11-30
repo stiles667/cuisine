@@ -21,4 +21,16 @@ class Recette
         $stmt->execute();
         return $stmt;
     }
+    public function addRecettes($data)
+    {
+        $query = "INSERT INTO recettes (nom, image, difficulte, temps_preparation, ustensiles) VALUES (:nom, :image, :difficulte, :temps_preparation, :ustensiles)";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':nom', $data['nom']);
+        $stmt->bindParam(':image', $data['image']);
+        $stmt->bindParam(':difficulte', $data['difficulte']);
+        $stmt->bindParam(':temps_preparation', $data['temps_preparation']);
+        $stmt->bindParam(':ustensiles', $data['ustensiles']);
+        $stmt->execute();
+        return $stmt;
+    }
 }
