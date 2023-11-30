@@ -10,11 +10,7 @@
         <h1>Bienvenue dans notre collection de recettes</h1>       
     </header>
 
-    <!-- <div class="bg-video">
-        <video autoplay loop muted>
-            <source src="food.webm" type="video/mp4">
-        </video>
-    </div>  -->
+    
 
     <main>
         <?php
