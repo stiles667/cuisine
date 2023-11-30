@@ -19,8 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $recipe->ustensiles = $_POST['ustensiles'];
         $recipe->id_categorie = $_POST['id_categorie'];
 
-        // Effectuez la modification
+        // Effectuez la modification de la recette
         $result = $recipe->editRecettes();
+
+        // Effectuez la modification des ingrédients
+        $ingredients = $_POST['ingredients'];
+        foreach ($ingredients as $ingredient) {
+            $recipe->id_ingredient = $ingredient['id'];
+            $recipe->nom = $ingredient['nom'];
+            $recipe->quantite = $ingredient['quantite'];
+            $recipe->editIngredient();
+        }
 
         if ($result) {
             echo 'La recette a été modifiée avec succès.';
@@ -46,8 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
         $recipeData = $recipe->getRecipeById($id);
+        $ingredients = $recipe->getIngredientsByRecipeId($id);
 
         if ($recipeData) {
+            // Affichez le formulaire de modification
             echo '<h2>Edit Recipe</h2>';
             echo '<form action="modif.php" method="post">';
             echo '<input type="hidden" name="id" value="' . $recipeData['id'] . '">';
@@ -57,11 +68,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo 'Preparation Time (minutes): <input type="text" name="temps_preparation" value="' . $recipeData['temps_preparation'] . '"><br>';
             echo 'Utensils: <input type="text" name="ustensiles" value="' . $recipeData['ustensiles'] . '"><br>';
             echo 'Category: <input type="text" name="id_categorie" value="' . $recipeData['id_categorie'] . '"><br>';
+
+            // Affichez les ingrédients
+            echo '<h2>Ingredients</h2>';
+            echo '<ul>';
+            foreach ($ingredients as $ingredient) {
+                echo '<li>';
+                echo 'Ingredient Name: <input type="text" name="ingredients[' . $ingredient['id'] . '][nom]" value="' . $ingredient['nom'] . '">';
+                echo 'Quantity: <input type="text" name="ingredients[' . $ingredient['id'] . '][quantite]" value="' . $ingredient['quantite'] . '">';
+                echo '<input type="hidden" name="ingredients[' . $ingredient['id'] . '][id]" value="' . $ingredient['id'] . '">';
+                echo '</li>';
+            }
+            echo '</ul>';
+
             echo '<input type="submit" value="Submit">';
             echo '</form>';
         } else {
             echo 'La recette avec cet ID n\'existe pas.';
         }
+    } else {
+        echo 'L\'ID de la recette n\'est pas fourni.';
     }
 }
 ?>
