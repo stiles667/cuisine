@@ -59,25 +59,49 @@
 
         // Récupérer les recettes avec leurs détails
         $recettesAvecDetails = getRecettesWithDetails();
-
-        // Afficher les recettes avec leurs détails
-        foreach ($recettesAvecDetails as $nomRecette => $details) {
-            echo '<section class="recette">';
-            echo '<h2>' . $nomRecette . '</h2>';
-            echo '<p>Catégorie : ' . $details['categorie'] . '</p>';
-            echo '<p>Ingrédients : ' . implode(", ", $details['ingredients']) . '</p>';
-            echo '<a href="#">Voir la recette</a>';
-            echo '</section>';
-        }
-
-        // Fermeture de la connexion à la base de données
-        $conn->close();
         ?>
-        <!-- Vous pouvez ajouter d'autres sections pour plus de recettes -->
+
+        <?php foreach ($recettesAvecDetails as $nomRecette => $details) : ?>
+            <section class="recette">
+                <h2><?= $nomRecette ?></h2>
+                <p>Catégorie : <?= $details['categorie'] ?></p>
+                <p>
+                    Ingrédients :
+                    <button onclick="showIngredients('<?= $nomRecette ?>')">Voir les ingrédients</button>
+                </p>
+                <p>...</p>
+                <a href="#">Voir la recette</a>
+            </section>
+        <?php endforeach; ?>
+
+        <div id="popup" class="popup">
+            <h2 id="popup-title"></h2>
+            <div id="popup-content"></div>
+            <button onclick="hideIngredients()">Fermer</button>
+        </div>
     </main>
 
     <footer>
-        <p>&copy; <?php echo date("Y"); ?> Recettes de cuisine</p>
+        <p>&copy; <?= date("Y"); ?> Recettes de cuisine</p>
     </footer>
+
+    <script>
+        function showIngredients(nomRecette) {
+            const ingredients = <?= json_encode($recettesAvecDetails) ?>;
+            const popup = document.getElementById('popup');
+            const title = document.getElementById('popup-title');
+            const content = document.getElementById('popup-content');
+
+            title.textContent = nomRecette;
+            content.textContent = `Ingrédients : ${ingredients[nomRecette].ingredients.join(', ')}`;
+
+            popup.style.display = 'block';
+        }
+
+        function hideIngredients() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
