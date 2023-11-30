@@ -10,7 +10,7 @@
         <h1>Bienvenue dans notre collection de recettes</h1>       
     </header>
 
-    
+
 
     <main>
         <?php
