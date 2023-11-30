@@ -41,5 +41,8 @@ class Recette
         $stmt->execute();
         return $stmt;
     }
-    
+    public function EditRecettes (){
+        
+    }
+
 }
