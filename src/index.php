@@ -31,6 +31,7 @@
         $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom
                   FROM recettes
                   INNER JOIN categories ON recettes.id_categorie = categories.id";
+                  
 
         $result = $conn->query($query);
 
