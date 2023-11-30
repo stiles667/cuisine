@@ -10,14 +10,12 @@
         <h1>Bienvenue dans notre collection de recettes</h1>       
     </header>
 
-    
-
     <main>
         <?php
         // Connexion à la base de données
         $servername = "localhost";
         $username = "root";
-        $password = "ilyass";
+        $password = "Khaled";
         $dbname = "cuisine";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -33,7 +31,7 @@
             $query = "SELECT recettes.nom AS recette_nom, categories.nom AS categorie_nom, ingredients.nom AS ingredient_nom
                       FROM recettes
                       INNER JOIN categories ON recettes.id_categorie = categories.id
-                      INNER JOIN ingredients ON recettes.id_ingredient = ingredients.id";
+                      INNER JOIN ingredients ON ingredients.recette_id = recettes.id";
 
             $result = $conn->query($query);
 
@@ -67,8 +65,8 @@
             <section class="recette">
                 <h2><?= $nomRecette ?></h2>
                 <p>Catégorie : <?= $details['categorie'] ?></p>
+                
                 <p>
-                    Ingrédients :
                     <button onclick="showIngredients('<?= $nomRecette ?>')">Voir les ingrédients</button>
                 </p>
                 <p>...</p>
@@ -82,7 +80,6 @@
             <button onclick="hideIngredients()">Fermer</button>
         </div>
     </main>
-   
 
     <footer>
         <p>&copy; <?= date("Y"); ?> Recettes de cuisine</p>
