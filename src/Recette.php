@@ -14,6 +14,7 @@ class Recette
     public $quantite;
     public $id_categorie;
     public $id_ingredient;
+    public $quantite;
 
     public function __construct($db)
     {
@@ -89,6 +90,15 @@ class Recette
         $stmt->bindParam(':id', $ingredientId);
         $stmt->execute();
         return $stmt;
+    }
+    public function getRecipeById($id)
+    {
+        $query = "SELECT * FROM recettes WHERE id = :id";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function editIngredient()
