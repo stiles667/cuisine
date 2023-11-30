@@ -11,9 +11,10 @@ class Recette
     public $temps_preparation;
     public $ustensiles;
     public $etapes_recette;
+    public $quantite;
     public $id_categorie;
     public $id_ingredient;
-    public $quantite;
+
 
     public function __construct($db)
     {
@@ -112,4 +113,15 @@ class Recette
         $stmt->execute();
         return $stmt;
     }
+    public function getIngredientsByRecipeId($recipeId)
+    {
+        $query = "SELECT * FROM ingredients WHERE recette_id = :recipe_id";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':recipe_id', $recipeId);
+        $stmt->execute();
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+
 }
