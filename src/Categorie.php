@@ -1,22 +1,19 @@
 <?php
-class Recette
+class Categorie
 {
     private $db;
+
     public $id;
     public $nom;
-    public $image;
-    public $difficulte;
-    public $temps_preparation;
-    public $ustensiles;
 
     public function __construct($db)
     {
         $this->db = $db;
     }
 
-    public function getAllRecettes()
+    public function getAllCategories()
     {
-        $query = "SELECT * FROM recettes";
+        $query = "SELECT * FROM categories";
         $stmt = $this->db->getConnection()->prepare($query);
         $stmt->execute();
         return $stmt;
