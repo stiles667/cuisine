@@ -60,15 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 <h1>Choisissez une recette à modifier :</h1>
 
-<ul>
-    <?php foreach ($recettes as $recette) : ?>
-        <li>
-            <a href="modifier_recette.php?id=<?php echo $recette['id']; ?>">
-                <?php echo $recette['nom']; ?>
-            </a>
-        </li>
-    <?php endforeach; ?>
-</ul>
 
 <h2>Edit Recipe</h2>
 

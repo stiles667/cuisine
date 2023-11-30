@@ -14,7 +14,7 @@ class Recette
     public $quantite;
     public $id_categorie;
     public $id_ingredient;
-    public $quantite;
+
 
     public function __construct($db)
     {

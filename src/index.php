@@ -15,7 +15,7 @@
         // Connexion à la base de données
         $servername = "localhost";
         $username = "root";
-        $password = "ilyass"; // Mettre le mot de passe de votre base de données selon votre configuration
+        $password = "1Aqzsedrf!"; 
         $dbname = "cuisine";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -28,10 +28,11 @@
         function getRecettesWithDetails() {
             global $conn;
 
-            $query = "SELECT recettes.nom AS recette_nom, categories.nom AS categorie_nom, ingredients.nom AS ingredient_nom
-                      FROM recettes
-                      INNER JOIN categories ON recettes.id_categorie = categories.id
-                      INNER JOIN ingredients ON ingredients.recette_id = recettes.id";
+            $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom, ingredients.nom AS ingredient_nom
+            FROM recettes
+            INNER JOIN categories ON recettes.id_categorie = categories.id
+            INNER JOIN ingredients ON ingredients.recette_id = recettes.id";
+
 
             $result = $conn->query($query);
 
@@ -39,18 +40,20 @@
 
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
+                    $recetteId = $row["recette_id"];
                     $recetteNom = $row["recette_nom"];
                     $categorieNom = $row["categorie_nom"];
                     $ingredientNom = $row["ingredient_nom"];
-
+                
                     if (!isset($recettes[$recetteNom])) {
                         $recettes[$recetteNom] = array(
+                            "id" => $recetteId,
                             "categorie" => $categorieNom,
                             "ingredients" => array($ingredientNom)
                         );
                     } else {
                         $recettes[$recetteNom]["ingredients"][] = $ingredientNom;
-                    }
+                    }                
                 }
             }
 
@@ -61,18 +64,23 @@
         $recettesAvecDetails = getRecettesWithDetails();
         ?>
 
-        <?php foreach ($recettesAvecDetails as $nomRecette => $details) : ?>
-            <section class="recette">
-                <h2><?= $nomRecette ?></h2>
-                <p>Catégorie : <?= $details['categorie'] ?></p>
-                
-                <p>
-                    <button onclick="showIngredients('<?= $nomRecette ?>')">Voir les ingrédients</button>
-                </p>
-                <p>...</p>
-                <a href="#">Voir la recette</a>
-            </section>
-        <?php endforeach; ?>
+<?php foreach ($recettesAvecDetails as $nomRecette => $details) : ?>
+    <section class="recette">
+        <h2><?= $nomRecette ?></h2>
+        <p>Catégorie : <?= $details['categorie'] ?></p>
+        
+        <p>
+            <button onclick="showIngredients('<?= $nomRecette ?>')">Voir les ingrédients</button>
+        </p>
+        <p>...</p>
+        <?php if (isset($details['id'])) : ?>
+            <a href="modif.php?id=<?= $details['id'] ?>">Modifier la recette</a>
+        <?php else : ?>
+            <p>Erreur : ID non défini pour cette recette.</p>
+        <?php endif; ?>
+    </section>
+<?php endforeach; ?>
+
 
         <div id="popup" class="popup">
             <h2 id="popup-title"></h2>
