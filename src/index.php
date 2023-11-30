@@ -10,12 +10,14 @@
         <h1>Bienvenue dans notre collection de recettes</h1>       
     </header>
 
+    
+
     <main>
         <?php
         // Connexion à la base de données
         $servername = "localhost";
         $username = "root";
-        $password = "Khaled";
+        $password = "ilyass";
         $dbname = "cuisine";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -80,6 +82,7 @@
             <button onclick="hideIngredients()">Fermer</button>
         </div>
     </main>
+   
 
     <footer>
         <p>&copy; <?= date("Y"); ?> Recettes de cuisine</p>

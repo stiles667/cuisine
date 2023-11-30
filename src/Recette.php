@@ -33,4 +33,13 @@ class Recette
         $stmt->execute();
         return $stmt;
     }
+    public function deleteRecettes($id)
+    {
+        $query = "DELETE FROM recettes WHERE id = :id";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt;
+    }
+    
 }

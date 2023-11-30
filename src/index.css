@@ -9,6 +9,11 @@ header {
     background-color: #000;
     padding: 20px;
     text-align: center;
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 header h1 {
@@ -25,6 +30,10 @@ header h1 {
     width: calc(50% - 40px); /* Pour deux recettes par ligne */
     box-sizing: border-box;
     vertical-align: top;
+    background-color: rgb(0, 0, 0);
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: aquamarine;
 }
 
 .recette h2 {
