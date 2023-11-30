@@ -7,7 +7,10 @@
 </head>
 <body>
     <header>
-        <h1>Bienvenue dans notre collection de recettes</h1>       
+        <h1>Bienvenue dans notre collection de recettes</h1>
+        <a href="ajout.php">
+            <button>Ajouter une recette</button>
+        </a>
     </header>
 
     <main>
@@ -24,84 +27,40 @@
             die("La connexion a échoué : " . $conn->connect_error);
         }
 
-        // Fonction pour récupérer les recettes avec leurs détails depuis la base de données
-        function getRecettesWithDetails() {
-            global $conn;
+        // Récupérer les recettes avec leurs détails
+        $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom
+                  FROM recettes
+                  INNER JOIN categories ON recettes.id_categorie = categories.id";
 
-            $query = "SELECT recettes.nom AS recette_nom, categories.nom AS categorie_nom, ingredients.nom AS ingredient_nom
-                      FROM recettes
-                      INNER JOIN categories ON recettes.id_categorie = categories.id
-                      INNER JOIN ingredients ON ingredients.recette_id = recettes.id";
+        $result = $conn->query($query);
 
-            $result = $conn->query($query);
-
-            $recettes = array();
-
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $recetteNom = $row["recette_nom"];
-                    $categorieNom = $row["categorie_nom"];
-                    $ingredientNom = $row["ingredient_nom"];
-
-                    if (!isset($recettes[$recetteNom])) {
-                        $recettes[$recetteNom] = array(
-                            "categorie" => $categorieNom,
-                            "ingredients" => array($ingredientNom)
-                        );
-                    } else {
-                        $recettes[$recetteNom]["ingredients"][] = $ingredientNom;
-                    }
-                }
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $recetteId = $row["recette_id"];
+                $nomRecette = $row["recette_nom"];
+                $categorieNom = $row["categorie_nom"];
+        ?>
+                <section class="recette">
+                    <div class="content">
+                        <h2><?= $nomRecette ?></h2>
+                        <p>Catégorie : <?= $categorieNom ?></p>
+                        <p>
+                            <a href="afficherRecette.php?recette_id=<?= $recetteId ?>">Voir la recette</a>
+                        </p>
+                    </div>
+                </section>
+        <?php
             }
-
-            return $recettes;
+        } else {
+            echo "Aucune recette trouvée.";
         }
 
-        // Récupérer les recettes avec leurs détails
-        $recettesAvecDetails = getRecettesWithDetails();
+        $conn->close();
         ?>
-
-        <?php foreach ($recettesAvecDetails as $nomRecette => $details) : ?>
-            <section class="recette">
-                <h2><?= $nomRecette ?></h2>
-                <p>Catégorie : <?= $details['categorie'] ?></p>
-                
-                <p>
-                    <button onclick="showIngredients('<?= $nomRecette ?>')">Voir les ingrédients</button>
-                </p>
-                <p>...</p>
-                <a href="#">Voir la recette</a>
-            </section>
-        <?php endforeach; ?>
-
-        <div id="popup" class="popup">
-            <h2 id="popup-title"></h2>
-            <div id="popup-content"></div>
-            <button onclick="hideIngredients()">Fermer</button>
-        </div>
     </main>
 
     <footer>
         <p>&copy; <?= date("Y"); ?> Recettes de cuisine</p>
     </footer>
-
-    <script>
-        function showIngredients(nomRecette) {
-            const ingredients = <?= json_encode($recettesAvecDetails) ?>;
-            const popup = document.getElementById('popup');
-            const title = document.getElementById('popup-title');
-            const content = document.getElementById('popup-content');
-
-            title.textContent = nomRecette;
-            content.textContent = `Ingrédients : ${ingredients[nomRecette].ingredients.join(', ')}`;
-
-            popup.style.display = 'block';
-        }
-
-        function hideIngredients() {
-            const popup = document.getElementById('popup');
-            popup.style.display = 'none';
-        }
-    </script>
 </body>
 </html>
