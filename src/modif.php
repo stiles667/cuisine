@@ -2,18 +2,14 @@
 require './Recette.php';
 require './config.php';
 
-// Assurez-vous que votre instance de base de données est correctement définie ici
 $your_db_instance = new Database();
 $recipe = new Recette($your_db_instance);
 
-// Vérifie si le paramètre 'id' est défini dans l'URL
+
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 
-// Vérifie si le formulaire a été soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Assurez-vous que les champs nécessaires sont présents dans le formulaire
     if (isset($_POST['nom'], $_POST['image'], $_POST['difficulte'], $_POST['temps_preparation'], $_POST['ustensiles'], $_POST['id_categorie'])) {
-        // Remplissez les données de la recette
         $recipe->id = $id;
         $recipe->nom = $_POST['nom'];
         $recipe->image = $_POST['image'];
@@ -34,16 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo 'Veuillez remplir tous les champs du formulaire.';
     }
 } else {
-    // Si l'ID n'est pas fourni, redirigez l'utilisateur ou affichez un message d'erreur
     if (!$id) {
         echo 'L\'ID de la recette n\'est pas fourni.';
         exit;
     }
 
-    // Obtenez les données de la recette
+
     $recipeData = $recipe->getRecipeById($id);
 
-    // Vérifiez si la recette existe
+   
     if (!$recipeData) {
         echo 'La recette avec cet ID n\'existe pas.';
         exit;
