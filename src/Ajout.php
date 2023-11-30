@@ -5,8 +5,8 @@ include_once './Recette.php';
 include_once './Ingredients.php';
 
 $database = new Database();
+$db = $database->getConnection();
 $recette = new Recette($db);
-$conn = $db->getConnection();
 $ingredientsManager = new Ingredients($db);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -15,6 +15,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $recette->difficulte = htmlspecialchars(strip_tags($_POST['difficulte_recette']));
     $recette->temps_preparation = htmlspecialchars(strip_tags($_POST['temps_preparation']));
     $recette->ustensiles = htmlspecialchars(strip_tags($_POST['ustensiles_recette']));
+
+    // Ajoutez la recette et récupérez son identifiant
+    $recette_id = $recette->ajouterRecette();
 
     // Vérifiez si les champs d'ingrédients existent dans le tableau $_POST
     if (isset($_POST['ingredient_nom']) && isset($_POST['ingredient_quantite'])) {
@@ -29,14 +32,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if ($recette_id = $recette->ajouterRecette()) {
-        echo "La recette a été ajoutée avec succès.";
+    if ($recette_id) {
+        echo "La recette a été ajoutée avec succès. Identifiant de la recette : $recette_id";
     } else {
         echo "Erreur lors de l'ajout de la recette.";
     }
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
