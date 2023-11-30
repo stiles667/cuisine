@@ -24,8 +24,13 @@
             <img src="chemin/vers/image.jpg" alt="Image de la recette">
             <a href="#">Voir la recette</a>
         </section>
-
-        <!-- Ajouter d'autres sections pour plus de recettes -->
+        <section class="recette">
+            <h2>Nom de la recette</h2>
+            <p>Description de la recette</p>
+            <img src="chemin/vers/image.jpg" alt="Image de la recette">
+            <a href="#">Voir la recette</a>
+        </section>
+        
     </main>
 
     <footer>
