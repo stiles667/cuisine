@@ -30,6 +30,10 @@ class Ingredients
         $stmt = $this->db->prepare($query);
 
         $stmt->execute([$recette_id, $ingredient_id, $quantite]);
+ 
     }
+
+    
 }
+
 ?>
