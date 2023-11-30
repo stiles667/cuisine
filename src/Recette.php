@@ -21,29 +21,85 @@ class Recette
 
     public function ajouterRecette()
     {
-        $query = "INSERT INTO recettes
-                  SET nom=?, 
-                      image=?, 
-                      difficulte=?, 
-                      temps_preparation=?, 
-                      ustensiles=?,
-                      etapes_recette=?";
+        $query = "SELECT * FROM recettes";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
 
-        $stmt = $this->db->prepare($query);
+    public function addRecettes($data)
+    {
+        $query = "INSERT INTO recettes (nom, image, difficulte, temps_preparation, ustensiles, id_categorie) 
+                  VALUES (:nom, :image, :difficulte, :temps_preparation, :ustensiles, :id_categorie)";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':nom', $data['nom']);
+        $stmt->bindParam(':image', $data['image']);
+        $stmt->bindParam(':difficulte', $data['difficulte']);
+        $stmt->bindParam(':temps_preparation', $data['temps_preparation']);
+        $stmt->bindParam(':ustensiles', $data['ustensiles']);
+        $stmt->bindParam(':id_categorie', $data['id_categorie']); 
+        $stmt->execute();
+        return $stmt;
+    }
 
-        $this->nom = htmlspecialchars(strip_tags($this->nom));
-        $this->image = htmlspecialchars(strip_tags($this->image));
-        $this->difficulte = htmlspecialchars(strip_tags($this->difficulte));
-        $this->temps_preparation = htmlspecialchars(strip_tags($this->temps_preparation));
-        $this->ustensiles = htmlspecialchars(strip_tags($this->ustensiles));
-        $this->etapes_recette = htmlspecialchars(strip_tags($this->etapes_recette));
+    public function deleteRecettes($id)
+    {
+        $query = "DELETE FROM recettes WHERE id = :id";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt;
+    }
 
-        if ($stmt->execute([$this->nom, $this->image, $this->difficulte, $this->temps_preparation, $this->ustensiles, $this->etapes_recette])) {
-            $recette_id = $this->db->lastInsertId();
-            return $recette_id;
-        }
+    public function editRecettes()
+    {
+        $query = "UPDATE recettes 
+                  SET nom = :nom, image = :image, difficulte = :difficulte, 
+                  temps_preparation = :temps_preparation, ustensiles = :ustensiles, id_categorie = :id_categorie 
+                  WHERE id = :id";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':nom', $this->nom);
+        $stmt->bindParam(':image', $this->image);
+        $stmt->bindParam(':difficulte', $this->difficulte);
+        $stmt->bindParam(':temps_preparation', $this->temps_preparation);
+        $stmt->bindParam(':ustensiles', $this->ustensiles);
+        $stmt->bindParam(':id_categorie', $this->id_categorie);
+        $stmt->execute();
+        return $stmt;
+    }
 
-        return false;
+    public function addIngredient($data)
+    {
+        $query = "INSERT INTO ingredients (nom, quantite, recette_id) 
+                  VALUES (:nom, :quantite, :recette_id)";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':nom', $data['nom']);
+        $stmt->bindParam(':quantite', $data['quantite']);
+        $stmt->bindParam(':recette_id', $data['recette_id']);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function deleteIngredient($ingredientId)
+    {
+        $query = "DELETE FROM ingredients WHERE id = :id";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':id', $ingredientId);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function editIngredient()
+    {
+        $query = "UPDATE ingredients 
+                  SET nom = :nom, quantite = :quantite 
+                  WHERE id = :id";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':id', $this->id_ingredient);
+        $stmt->bindParam(':nom', $this->nom);
+        $stmt->bindParam(':quantite', $this->quantite);
+        $stmt->execute();
+        return $stmt;
     }
 }
-?>

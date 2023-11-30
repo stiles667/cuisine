@@ -15,17 +15,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $recette->difficulte = htmlspecialchars(strip_tags($_POST['difficulte_recette']));
     $recette->temps_preparation = htmlspecialchars(strip_tags($_POST['temps_preparation']));
     $recette->ustensiles = htmlspecialchars(strip_tags($_POST['ustensiles_recette']));
+    $recette->etapes_recette = htmlspecialchars(strip_tags($_POST['etapes_recette']));
 
-    // Ajoutez la recette et récupérez son identifiant
     $recette_id = $recette->ajouterRecette();
 
-    // Vérifiez si les champs d'ingrédients existent dans le tableau $_POST
+
     if (isset($_POST['ingredient_nom']) && isset($_POST['ingredient_quantite'])) {
-        // Récupérez les valeurs des champs d'ingrédients
         $ingredient_noms = $_POST['ingredient_nom'];
         $ingredient_quantites = $_POST['ingredient_quantite'];
 
-        // Ajoutez chaque ingrédient à la recette
         foreach ($ingredient_noms as $key => $ingredient_nom) {
             $ingredient_quantite = $ingredient_quantites[$key];
             $ingredientsManager->ajouterIngredient($ingredient_nom, $ingredient_quantite, $recette_id);
@@ -67,6 +65,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label for="ustensiles_recette">Ustensiles:</label>
         <input type="text" name="ustensiles_recette"><br>
+
+        <label for="etapes_recette">Étapes de la recette:</label>
+        <textarea name="etapes_recette" rows="4" cols="50" required></textarea><br>
 
         <h3>Ingrédients:</h3>
         <div id="ingredients-container">
