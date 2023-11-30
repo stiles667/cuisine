@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($ingredients as $ingredient) {
             $recipe->id_ingredient = $ingredient['id'];
             $recipe->nom = $ingredient['nom'];
-            $recipe->quantite = $ingredient['quantite'];
             $recipe->editIngredient();
         }
 
