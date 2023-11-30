@@ -48,6 +48,9 @@
                         <p>
                             <a href="afficherRecette.php?recette_id=<?= $recetteId ?>">Voir la recette</a>
                         </p>
+                        <p>
+                             <a href="modif.php?id=<?= $recetteId ?>">Modifier la recette</a>
+                        </p>
                     </div>
                 </section>
         <?php
