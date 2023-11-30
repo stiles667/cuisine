@@ -42,7 +42,17 @@ class Recette
         return $stmt;
     }
     public function EditRecettes (){
-        
+        $query = "UPDATE recettes SET nom = :nom, image = :image, difficulte = :difficulte, temps_preparation = :temps_preparation, ustensiles = :ustensiles WHERE id = :id";
+        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':nom', $this->nom);
+        $stmt->bindParam(':image', $this->image);
+        $stmt->bindParam(':difficulte', $this->difficulte);
+        $stmt->bindParam(':temps_preparation', $this->temps_preparation);
+        $stmt->bindParam(':ustensiles', $this->ustensiles);
+        $stmt->execute();
+        return $stmt;
+
     }
 
 }
