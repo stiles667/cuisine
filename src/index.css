@@ -1,3 +1,9 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Dancing+Script:wght@700&family=PT+Serif:ital,wght@1,700&display=swap');
+
+
+
+
 /* Reset des marges et paddings */
 body, h1, h2, p, ul, li {
     margin: 0;
@@ -14,6 +20,9 @@ header {
     background-position: center center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    font-family: 'Bebas Neue', sans-serif;
+    font-family: 'PT Serif', serif;
+    font-family: 'Dancing Script', 'cursive';
 }
 
 header h1 {
