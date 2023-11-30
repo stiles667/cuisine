@@ -21,6 +21,7 @@ if (PHP_VERSION_ID < 80000) {
         /**
          * @internal
          */
+        final class BinProxyWrapper
         {
             private $handle;
             private $position;
