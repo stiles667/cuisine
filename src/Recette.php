@@ -25,6 +25,14 @@ class Recette
         $stmt->execute();
         return $stmt;
     }
+    public function getCategories() {
+        $query = "SELECT id, nom FROM categories";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
     public function ajouterRecette()
 {
     $queryRecette = "INSERT INTO recettes 

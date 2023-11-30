@@ -14,6 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $recette->temps_preparation = htmlspecialchars(strip_tags($_POST['temps_preparation']));
     $recette->ustensiles = htmlspecialchars(strip_tags($_POST['ustensiles_recette']));
     $recette->etapes_recette = htmlspecialchars(strip_tags($_POST['etapes_recette'])); 
+    $recette->id_categorie = htmlspecialchars(strip_tags($_POST['categorie_recette']));
+
 
     $recette_id = $recette->ajouterRecette();
 
@@ -69,6 +71,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label for="etapes_recette">Étapes de la recette:</label>
         <textarea name="etapes_recette" rows="4" cols="50" required></textarea><br>
+
+        <!-- Ajout du menu déroulant pour les catégories -->
+        <label for="categorie_recette">Catégorie de la recette:</label>
+        <select name="categorie_recette">
+            <?php
+            // Récupérer les catégories de recettes depuis la méthode getCategories() de votre classe Recette
+            $categories = $recette->getCategories();
+
+            // Affichage des catégories dans le menu déroulant
+            foreach ($categories as $categorie) {
+                echo '<option value="' . $categorie['id'] . '">' . $categorie['nom'] . '</option>';
+            }
+            ?>
+        </select><br>
 
         <h3>Ingrédients:</h3>
         <div id="ingredients-container">
