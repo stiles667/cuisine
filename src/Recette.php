@@ -11,6 +11,7 @@ class Recette
     public $temps_preparation;
     public $ustensiles;
     public $etapes_recette;
+    public $quantite;
     public $id_categorie;
     public $id_ingredient;
 
