@@ -11,38 +11,93 @@ class Recette
     public $temps_preparation;
     public $ustensiles;
     public $etapes_recette;
-    public $quantite;
     public $id_categorie;
     public $id_ingredient;
-
-
     public function __construct($db)
     {
         $this->db = $db;
     }
 
-    public function ajouterRecette()
+    public function getAllRecettes()
     {
         $query = "SELECT * FROM recettes";
         $stmt = $this->db->getConnection()->prepare($query);
         $stmt->execute();
         return $stmt;
     }
+    public function ajouterRecette()
+{
+    $queryRecette = "INSERT INTO recettes 
+                     (nom, image, difficulte, temps_preparation, ustensiles, etapes_recette)
+                     VALUES (:nom_recette, :image_recette, :difficulte_recette, :temps_preparation, :ustensiles_recette, :etapes_recette)";
 
-    public function addRecettes($data)
-    {
-        $query = "INSERT INTO recettes (nom, image, difficulte, temps_preparation, ustensiles, id_categorie) 
-                  VALUES (:nom, :image, :difficulte, :temps_preparation, :ustensiles, :id_categorie)";
-        $stmt = $this->db->getConnection()->prepare($query);
-        $stmt->bindParam(':nom', $data['nom']);
-        $stmt->bindParam(':image', $data['image']);
-        $stmt->bindParam(':difficulte', $data['difficulte']);
-        $stmt->bindParam(':temps_preparation', $data['temps_preparation']);
-        $stmt->bindParam(':ustensiles', $data['ustensiles']);
-        $stmt->bindParam(':id_categorie', $data['id_categorie']); 
-        $stmt->execute();
-        return $stmt;
+    $stmtRecette = $this->db->prepare($queryRecette);
+
+    $this->nom = htmlspecialchars(strip_tags($this->nom));
+    $this->image = htmlspecialchars(strip_tags($this->image));
+    $this->difficulte = htmlspecialchars(strip_tags($this->difficulte));
+    $this->temps_preparation = htmlspecialchars(strip_tags($this->temps_preparation));
+    $this->ustensiles = htmlspecialchars(strip_tags($this->ustensiles));
+    $this->etapes_recette = htmlspecialchars(strip_tags($this->etapes_recette));
+
+    $stmtRecette->bindParam(":nom_recette", $this->nom);
+    $stmtRecette->bindParam(":image_recette", $this->image);
+    $stmtRecette->bindParam(":difficulte_recette", $this->difficulte);
+    $stmtRecette->bindParam(":temps_preparation", $this->temps_preparation);
+    $stmtRecette->bindParam(":ustensiles_recette", $this->ustensiles);
+    $stmtRecette->bindParam(":etapes_recette", $this->etapes_recette);
+
+    if ($stmtRecette->execute()) {
+        $recetteId = $this->db->lastInsertId();
+
+        if (!empty($_POST['ingredient_nom'])) {
+            $ingredient_noms = $_POST['ingredient_nom'];
+            $ingredient_quantites = $_POST['ingredient_quantite'];
+
+            foreach ($ingredient_noms as $key => $ingredient_nom) {
+                $ingredient_quantite = $ingredient_quantites[$key];
+
+                // Vous devez ajouter du code ici pour insérer l'ingrédient dans la table recettes
+                $this->ajouterIngredient($ingredient_nom, $ingredient_quantite, $recetteId);
+            }
+        }
+
+        return $recetteId;
     }
+
+    return false;
+}
+public function ajouterIngredient($nom, $quantite, $recetteId)
+{
+    // Vérifier si l'ingrédient existe déjà
+    $queryCheckIngredient = "SELECT id FROM ingredients WHERE nom = :nom";
+    $stmtCheckIngredient = $this->db->prepare($queryCheckIngredient);
+    $stmtCheckIngredient->bindParam(":nom", $nom);
+    $stmtCheckIngredient->execute();
+
+    if ($stmtCheckIngredient->rowCount() > 0) {
+        $row = $stmtCheckIngredient->fetch(PDO::FETCH_ASSOC);
+        $ingredientId = $row['id'];
+    } else {
+        $queryIngredient = "INSERT INTO ingredients (nom) VALUES (:nom)";
+        $stmtIngredient = $this->db->prepare($queryIngredient);
+        $stmtIngredient->bindParam(":nom", $nom);
+        $stmtIngredient->execute();
+
+        $ingredientId = $this->db->lastInsertId();
+    }
+
+
+    $queryRecetteIngredient = "INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite) VALUES (:recette_id, :ingredient_id, :quantite)";
+    $stmtRecetteIngredient = $this->db->prepare($queryRecetteIngredient);
+
+    $stmtRecetteIngredient->bindParam(":recette_id", $recetteId);
+    $stmtRecetteIngredient->bindParam(":ingredient_id", $ingredientId);
+    $stmtRecetteIngredient->bindParam(":quantite", $quantite);
+
+    $stmtRecetteIngredient->execute();
+}
+
 
     public function deleteRecettes($id)
     {
@@ -109,7 +164,6 @@ class Recette
         $stmt = $this->db->getConnection()->prepare($query);
         $stmt->bindParam(':id', $this->id_ingredient);
         $stmt->bindParam(':nom', $this->nom);
-        $stmt->bindParam(':quantite', $this->quantite);
         $stmt->execute();
         return $stmt;
     }
