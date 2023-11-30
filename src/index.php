@@ -15,7 +15,7 @@
         // Connexion à la base de données
         $servername = "localhost";
         $username = "root";
-        $password = "1Aqzsedrf!";
+        $password = "ilyass"; // Mettre le mot de passe de votre base de données selon votre configuration
         $dbname = "cuisine";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
