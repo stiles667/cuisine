@@ -1,2 +1,3 @@
 phpunit.xml
 /vendor
+src/config.php
