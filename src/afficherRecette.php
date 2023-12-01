@@ -39,20 +39,19 @@
         $recetteDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($recetteDetails) {
-            foreach ($recetteDetails as $details) {
-                $nomRecette = $details["recette_nom"];
-                $categorieNom = $details["categorie_nom"];
-                $ingredientNom = $details["ingredient_nom"];
-    ?>
-                <section class="recette">
-                    <div class="content">
-                        <h2><?= $nomRecette ?></h2>
-                        <p>Catégorie : <?= $categorieNom ?></p>
-                        <p>Ingrédients : <?= $ingredientNom ?></p>
-                    </div>
-                </section>
-    <?php
-            }
+            $nomRecette = $recetteDetails[0]["recette_nom"];
+            $categorieNom = $recetteDetails[0]["categorie_nom"];
+            $ingredients = array_column($recetteDetails, 'ingredient_nom');
+        
+            ?>
+            <section class="recette">
+                <div class="content">
+                    <h2><?= $nomRecette ?></h2>
+                    <p>Catégorie : <?= $categorieNom ?></p>
+                    <p>Ingrédients : <?= implode(", ", $ingredients) ?></p>
+                </div>
+            </section>
+            <?php
         } else {
             echo "Aucune recette trouvée.";
         }
