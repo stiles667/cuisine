@@ -6,19 +6,19 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <header>
-        <h1>Bienvenue dans notre collection de recettes</h1>
-        <a href="ajout.php">
-            <button>Ajouter une recette</button>
-        </a>
-    </header>
+<header>
+    <h1>Bienvenue dans notre collection de recettes</h1>
+    <a href="ajout.php">
+        <button>Ajouter une recette</button>
+    </a>
+</header>
 
     <main>
         <?php
         // Connexion à la base de données
         $servername = "localhost";
         $username = "root";
-        $password = "1Aqzsedrf!";
+        $password = "Khaled";
         $dbname = "cuisine";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
