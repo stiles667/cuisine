@@ -2,11 +2,10 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Recettes de cuisine</title>
+    <title>Résultats de la recherche</title>
     <link rel="stylesheet" href="index.css">
 </head>
-<body>
-    <header>
+<header>
         <h1>Bienvenue dans notre collection de recettes</h1>
         <a href="ajout.php">
             <button>Ajouter une recette</button>
@@ -17,10 +16,11 @@
             <input type="submit" value="Rechercher">
         </form>
     </header>
+<body>
+    <?php
+    // recherche.php
 
-    <main>
-        <?php
-        // Connexion à la base de données
+    if (isset($_GET['search'])) {
         $servername = "localhost";
         $username = "root";
         $password = "Khaled";
@@ -31,12 +31,13 @@
         if ($conn->connect_error) {
             die("La connexion a échoué : " . $conn->connect_error);
         }
+        $searchTerm = $conn->real_escape_string($_GET['search']);
 
-        // Récupérer les recettes avec leurs détails
+
         $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom
                   FROM recettes
-                  INNER JOIN categories ON recettes.id_categorie = categories.id";
-                  
+                  INNER JOIN categories ON recettes.id_categorie = categories.id
+                  WHERE recettes.nom LIKE '%$searchTerm%' OR categories.nom LIKE '%$searchTerm%'";
 
         $result = $conn->query($query);
 
@@ -45,7 +46,7 @@
                 $recetteId = $row["recette_id"];
                 $nomRecette = $row["recette_nom"];
                 $categorieNom = $row["categorie_nom"];
-        ?>
+                ?>
                 <section class="recette">
                     <div class="content">
                         <h2><?= $nomRecette ?></h2>
@@ -54,22 +55,20 @@
                             <a href="afficherRecette.php?recette_id=<?= $recetteId ?>">Voir la recette</a>
                         </p>
                         <p>
-                             <a href="modif.php?id=<?= $recetteId ?>">Modifier la recette</a>
+                            <a href="modif.php?id=<?= $recetteId ?>">Modifier la recette</a>
                         </p>
                     </div>
                 </section>
-        <?php
+                <?php
             }
         } else {
-            echo "Aucune recette trouvée.";
+            echo "Aucune recette trouvée pour la recherche : $searchTerm";
         }
 
         $conn->close();
-        ?>
-    </main>
-
-    <footer>
-        <p>&copy; <?= date("Y"); ?> Recettes de cuisine</p>
-    </footer>
+    } else {
+        echo "Aucun terme de recherche spécifié.";
+    }
+    ?>
 </body>
 </html>
