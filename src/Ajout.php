@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index2.css">
     <title>Créer une nouvelle recette</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
