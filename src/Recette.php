@@ -36,8 +36,8 @@ class Recette
     public function ajouterRecette()
 {
     $queryRecette = "INSERT INTO recettes 
-                     (nom, image, difficulte, temps_preparation, ustensiles, etapes_recette)
-                     VALUES (:nom_recette, :image_recette, :difficulte_recette, :temps_preparation, :ustensiles_recette, :etapes_recette)";
+                     (nom, image, difficulte, temps_preparation, ustensiles, etapes_recette, id_categorie)
+                     VALUES (:nom_recette, :image_recette, :difficulte_recette, :temps_preparation, :ustensiles_recette, :etapes_recette, :id_categorie)";
 
     $stmtRecette = $this->db->prepare($queryRecette);
 
@@ -47,6 +47,7 @@ class Recette
     $this->temps_preparation = htmlspecialchars(strip_tags($this->temps_preparation));
     $this->ustensiles = htmlspecialchars(strip_tags($this->ustensiles));
     $this->etapes_recette = htmlspecialchars(strip_tags($this->etapes_recette));
+    $this->id_categorie = htmlspecialchars(strip_tags($this->id_categorie));
 
     $stmtRecette->bindParam(":nom_recette", $this->nom);
     $stmtRecette->bindParam(":image_recette", $this->image);
@@ -54,6 +55,7 @@ class Recette
     $stmtRecette->bindParam(":temps_preparation", $this->temps_preparation);
     $stmtRecette->bindParam(":ustensiles_recette", $this->ustensiles);
     $stmtRecette->bindParam(":etapes_recette", $this->etapes_recette);
+    $stmtRecette->bindParam(":id_categorie", $this->id_categorie); 
 
     if ($stmtRecette->execute()) {
         $recetteId = $this->db->lastInsertId();
@@ -64,8 +66,6 @@ class Recette
 
             foreach ($ingredient_noms as $key => $ingredient_nom) {
                 $ingredient_quantite = $ingredient_quantites[$key];
-
-                // Vous devez ajouter du code ici pour insérer l'ingrédient dans la table recettes
                 $this->ajouterIngredient($ingredient_nom, $ingredient_quantite, $recetteId);
             }
         }
@@ -75,6 +75,7 @@ class Recette
 
     return false;
 }
+
 public function ajouterIngredient($nom, $quantite, $recetteId)
 {
     // Vérifier si l'ingrédient existe déjà
@@ -184,6 +185,18 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+    public function ajouterCategorie($nom)
+{
+    $query = "INSERT INTO categories (nom) VALUES (:nom)";
+    $stmt = $this->db->prepare($query);
+
+    $stmt->bindParam(":nom", $nom);
+
+    if ($stmt->execute()) {
+        return true;
+    }
+
+    return false;
+}
 
 }
