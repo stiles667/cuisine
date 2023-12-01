@@ -1,6 +1,5 @@
 <?php
 require './Recette.php';
-
 require './config.php';
 
 $database = new Database();
@@ -26,13 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Effectuez la modification ou l'ajout des ingrédients
         $ingredients = $_POST['ingredients'];
         foreach ($ingredients as $ingredientId => $ingredientData) {
-            $idIngredient = $ingredientData['id_ingredient'];
+            $idIngredient = $ingredientId; // Utilisez la clé actuelle comme ID de l'ingrédient
             $nomIngredient = isset($ingredientData['nom']) ? $ingredientData['nom'] : '';
             $quantiteIngredient = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
 
             // Modifiez la quantité dans la table recette_ingredient
-            $ingredientsManager->editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngredient, $nouvelleQuantite);
-
+            $ingredientsManager->editQuantiteIngredient($idIngredient, $id, $idIngredient, $quantiteIngredient);
         }
 
         if ($result) {
@@ -71,9 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo '<h2>Ingredients</h2>';
             foreach ($ingredients as $ingredient) {
                 // Vérifier si la clé 'id_ingredient' existe avant de l'utiliser
-                $idIngredient = isset($ingredient['id_ingredient']) ? $ingredient['id_ingredient'] : '';
+                $idIngredient = isset($ingredient['ingredient_id']) ? $ingredient['ingredient_id'] : '';
 
-                echo '<input type="hidden" name="ingredients[' . $idIngredient . '][id_ingredient]" value="' . $idIngredient . '">';
+                echo '<input type="hidden" name="ingredients[' . $idIngredient . '][ingredient_id]" value="' . $idIngredient . '">';
                 echo 'Ingredient Name: <input type="text" name="ingredients[' . $idIngredient . '][nom]" value="' . $ingredient['nom'] . '">';
                 echo 'Quantity: <input type="text" name="ingredients[' . $idIngredient . '][quantite]" value="' . $ingredient['quantite'] . '"><br>';
             }
