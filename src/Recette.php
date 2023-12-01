@@ -169,14 +169,12 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
 
         public function editIngredient()
         {
-            // Vérifier d'abord si l'ingrédient existe
             $checkQuery = "SELECT * FROM recette_ingredient WHERE id = :id";
             $checkStmt = $this->db->getConnection()->prepare($checkQuery);
             $checkStmt->bindParam(':id', $this->id_ingredient);
             $checkStmt->execute();
         
             if ($checkStmt->rowCount() > 0) {
-                // L'ingrédient existe, effectuer la mise à jour
                 $updateQuery = "UPDATE recette_ingredient SET quantite = :quantite WHERE id = :id";
                 $updateStmt = $this->db->getConnection()->prepare($updateQuery);
                 $updateStmt->bindParam(':id', $this->id_ingredient);
@@ -185,7 +183,6 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
         
                 return $updateStmt;
             } else {
-                // L'ingrédient n'existe pas
                 echo "L'ingrédient avec l'ID " . $this->id_ingredient . " n'existe pas.";
                 return false;
             }
@@ -194,12 +191,14 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
 
         public function getIngredientsByRecipeId($recipeId)
         {
-            $query = "SELECT * FROM ingredients WHERE recette_id = :recipe_id";
+            
+            $query = "SELECT * FROM recette_ingredient WHERE recette_id = :recette_id";
             $stmt = $this->db->getConnection()->prepare($query);
-            $stmt->bindParam(':recipe_id', $recipeId);
+            $stmt->bindParam(':recette_id', $recipeId);
             $stmt->execute();
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
         }
         public function ajouterCategorie($nom)
         {
