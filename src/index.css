@@ -67,7 +67,7 @@ input[type="submit"],
 
 input[type="submit"],
 .button-wrapper button {
-    background-color: #bebbbb;
+    background-color: #090909;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;

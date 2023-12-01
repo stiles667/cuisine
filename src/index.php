@@ -22,6 +22,13 @@
     </div>
 </header>
 
+<main>
+    <?php
+    // Connexion à la base de données
+    $servername = "localhost";
+    $username = "root";
+    $password = "Khaled";
+    $dbname = "cuisine";
     <main>
         <?php
         // Connexion à la base de données
