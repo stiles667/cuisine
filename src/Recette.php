@@ -125,7 +125,9 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
                     SET nom = :nom, image = :image, difficulte = :difficulte, 
                     temps_preparation = :temps_preparation, ustensiles = :ustensiles, id_categorie = :id_categorie 
                     WHERE id = :id";
-            $stmt = $this->db->getConnection()->prepare($query);
+            
+            $stmt = $this->db->prepare($query);
+            
             $stmt->bindParam(':id', $this->id);
             $stmt->bindParam(':nom', $this->nom);
             $stmt->bindParam(':image', $this->image);
@@ -133,21 +135,24 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
             $stmt->bindParam(':temps_preparation', $this->temps_preparation);
             $stmt->bindParam(':ustensiles', $this->ustensiles);
             $stmt->bindParam(':id_categorie', $this->id_categorie);
+            
             $stmt->execute();
+            
             return $stmt;
         }
 
-    public function addIngredient($data)
-    {
-        $query = "INSERT INTO ingredients (nom, quantite, recette_id) 
-                  VALUES (:nom, :quantite, :recette_id)";
-        $stmt = $this->db->getConnection()->prepare($query);
-        $stmt->bindParam(':nom', $data['nom']);
-        $stmt->bindParam(':quantite', $data['quantite']);
-        $stmt->bindParam(':recette_id', $data['recette_id']);
-        $stmt->execute();
-        return $stmt;
-    }
+
+        public function addIngredient($nom) {
+            $query = "INSERT INTO ingredients (nom) VALUES (:nom)";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(":nom", $nom);
+    
+            if ($stmt->execute()) {
+                return $this->db->lastInsertId();
+            } else {
+                return false;
+            }
+        }
 
     public function deleteIngredient($ingredientId)
     {
@@ -160,7 +165,7 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
     public function getRecipeById($id)
     {
         $query = "SELECT * FROM recettes WHERE id = :id";
-        $stmt = $this->db->getConnection()->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
 
@@ -191,10 +196,13 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
 
         public function getIngredientsByRecipeId($recipeId)
         {
+            $query = "SELECT i.nom, ri.quantite
+                    FROM recette_ingredient ri
+                    JOIN ingredients i ON ri.ingredient_id = i.id
+                    WHERE ri.recette_id = :recipe_id";
             
-            $query = "SELECT * FROM recette_ingredient WHERE recette_id = :recette_id";
-            $stmt = $this->db->getConnection()->prepare($query);
-            $stmt->bindParam(':recette_id', $recipeId);
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':recipe_id', $recipeId);
             $stmt->execute();
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);

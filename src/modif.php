@@ -1,9 +1,12 @@
 <?php
 require './Recette.php';
+
 require './config.php';
 
-$your_db_instance = new Database();
-$recipe = new Recette($your_db_instance);
+$database = new Database();
+$db = $database->getConnection();
+$recipe = new Recette($db);
+$ingredientsManager = new Ingredients($db);
 
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 
@@ -17,14 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $recipe->ustensiles = $_POST['ustensiles'];
         $recipe->id_categorie = $_POST['id_categorie'];
 
+        // Effectuez la modification de la recette
         $result = $recipe->editRecettes();
 
-        if (isset($_POST['id'], $_POST['recette_id'], $_POST['ingredient_id'], $_POST['quantite'])) {
-            $id = $_POST['id'];
-            $recette_id = $_POST['recette_id'];
-            $ingredient_id = $_POST['ingredient_id'];
-            $quantite = $_POST['quantite'];
-            $stmt->execute();
+        // Effectuez la modification ou l'ajout des ingrédients
+        $ingredients = $_POST['ingredients'];
+        foreach ($ingredients as $ingredientId => $ingredientData) {
+            $idIngredient = $ingredientData['id_ingredient'];
+            $nomIngredient = isset($ingredientData['nom']) ? $ingredientData['nom'] : '';
+            $quantiteIngredient = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
+
+            // Modifiez la quantité dans la table recette_ingredient
+            $ingredientsManager->editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngredient, $nouvelleQuantite);
+
         }
 
         if ($result) {
@@ -61,27 +69,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Affichez les ingrédients
             echo '<h2>Ingredients</h2>';
-            echo '<ul>';
-            // var_dump($ingredients);
+            foreach ($ingredients as $ingredient) {
+                // Vérifier si la clé 'id_ingredient' existe avant de l'utiliser
+                $idIngredient = isset($ingredient['id_ingredient']) ? $ingredient['id_ingredient'] : '';
 
-                foreach ($ingredients as $ingredient) {
-                    // Check if the key "id" exists before accessing it
-                    $ingredientId = isset($ingredient['id']) ? $ingredient['id'] : null;
-                    echo 'Ingredient ID: ' . $ingredientId . '<br>';
-
-                    // Check if the key "recette_id" exists before accessing it
-                    $recetteId = isset($ingredient['recette_id']) ? $ingredient['recette_id'] : null;
-                    echo 'Recipe ID: ' . $recetteId . '<br>';
-
-                    // Check if the key "ingredient_id" exists before accessing it
-                    $ingredientId = isset($ingredient['ingredient_id']) ? $ingredient['ingredient_id'] : null;
-                    echo 'Ingredient ID: ' . $ingredientId . '<br>';
-
-                    // Check if the key "quantite" exists before accessing it
-                    $quantity = isset($ingredient['quantite']) ? $ingredient['quantite'] : null;
-                    echo 'Quantity: ' . $quantity . '<br>';
-                }
-            echo '</ul>';
+                echo '<input type="hidden" name="ingredients[' . $idIngredient . '][id_ingredient]" value="' . $idIngredient . '">';
+                echo 'Ingredient Name: <input type="text" name="ingredients[' . $idIngredient . '][nom]" value="' . $ingredient['nom'] . '">';
+                echo 'Quantity: <input type="text" name="ingredients[' . $idIngredient . '][quantite]" value="' . $ingredient['quantite'] . '"><br>';
+            }
 
             echo '<input type="submit" value="Submit">';
             echo '</form>';
