@@ -11,11 +11,13 @@ class Recette
     public $temps_preparation;
     public $ustensiles;
     public $etapes_recette;
+    private $ingredients;
     public $id_categorie;
     public $id_ingredient;
     public function __construct($db)
     {
         $this->db = $db;
+        $this->ingredients = new Ingredients($db);
     }
 
     public function getAllRecettes()
@@ -66,7 +68,7 @@ class Recette
 
             foreach ($ingredient_noms as $key => $ingredient_nom) {
                 $ingredient_quantite = $ingredient_quantites[$key];
-                $this->ajouterIngredient($ingredient_nom, $ingredient_quantite, $recetteId);
+                $this->ingredients->ajouterIngredient($ingredient_nom, $ingredient_quantite, $recetteId);
             }
         }
 
@@ -76,36 +78,7 @@ class Recette
     return false;
 }
 
-public function ajouterIngredient($nom, $quantite, $recetteId)
-{
-    // Vérifier si l'ingrédient existe déjà
-    $queryCheckIngredient = "SELECT id FROM ingredients WHERE nom = :nom";
-    $stmtCheckIngredient = $this->db->prepare($queryCheckIngredient);
-    $stmtCheckIngredient->bindParam(":nom", $nom);
-    $stmtCheckIngredient->execute();
 
-    if ($stmtCheckIngredient->rowCount() > 0) {
-        $row = $stmtCheckIngredient->fetch(PDO::FETCH_ASSOC);
-        $ingredientId = $row['id'];
-    } else {
-        $queryIngredient = "INSERT INTO ingredients (nom) VALUES (:nom)";
-        $stmtIngredient = $this->db->prepare($queryIngredient);
-        $stmtIngredient->bindParam(":nom", $nom);
-        $stmtIngredient->execute();
-
-        $ingredientId = $this->db->lastInsertId();
-    }
-
-
-    $queryRecetteIngredient = "INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite) VALUES (:recette_id, :ingredient_id, :quantite)";
-    $stmtRecetteIngredient = $this->db->prepare($queryRecetteIngredient);
-
-    $stmtRecetteIngredient->bindParam(":recette_id", $recetteId);
-    $stmtRecetteIngredient->bindParam(":ingredient_id", $ingredientId);
-    $stmtRecetteIngredient->bindParam(":quantite", $quantite);
-
-    $stmtRecetteIngredient->execute();
-}
 
 
     public function deleteRecettes($id)
@@ -135,26 +108,8 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
         return $stmt;
     }
 
-    public function addIngredient($data)
-    {
-        $query = "INSERT INTO ingredients (nom, quantite, recette_id) 
-                  VALUES (:nom, :quantite, :recette_id)";
-        $stmt = $this->db->getConnection()->prepare($query);
-        $stmt->bindParam(':nom', $data['nom']);
-        $stmt->bindParam(':quantite', $data['quantite']);
-        $stmt->bindParam(':recette_id', $data['recette_id']);
-        $stmt->execute();
-        return $stmt;
-    }
 
-    public function deleteIngredient($ingredientId)
-    {
-        $query = "DELETE FROM ingredients WHERE id = :id";
-        $stmt = $this->db->getConnection()->prepare($query);
-        $stmt->bindParam(':id', $ingredientId);
-        $stmt->execute();
-        return $stmt;
-    }
+    
     public function getRecipeById($id)
     {
         $query = "SELECT * FROM recettes WHERE id = :id";
@@ -185,18 +140,6 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function ajouterCategorie($nom)
-{
-    $query = "INSERT INTO categories (nom) VALUES (:nom)";
-    $stmt = $this->db->prepare($query);
-
-    $stmt->bindParam(":nom", $nom);
-
-    if ($stmt->execute()) {
-        return true;
-    }
-
-    return false;
-}
+    
 
 }
