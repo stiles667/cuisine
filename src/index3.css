@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.recette {
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.recette h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.recette p {
+    margin-bottom: 5px;
+}
+
+.recette ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.recette ul li {
+    margin-bottom: 5px;
+    color: #555;
+}
