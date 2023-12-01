@@ -87,33 +87,17 @@ public function deleteIngredient($ingredientId)
         return false;
     }
 }
-public function editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngredient, $nouvelleQuantite) {
-    // Vérifier d'abord si l'ingrédient existe
-    $checkQuery = "SELECT * FROM recette_ingredient WHERE id = :id AND id_recette = :id_recette AND id_ingredient = :id_ingredient";
-    $checkStmt = $this->db->getConnection()->prepare($checkQuery);
-    $checkStmt->bindParam(':id', $idRecetteIngredient);
-    $checkStmt->bindParam(':id_recette', $idRecette);
-    $checkStmt->bindParam(':id_ingredient', $idIngredient);
-    $checkStmt->execute();
-
-    if ($checkStmt->rowCount() > 0) {
-        // L'ingrédient existe, effectuer la mise à jour
-        $updateQuery = "UPDATE recette_ingredient SET quantite = :quantite WHERE id = :id AND id_recette = :id_recette AND id_ingredient = :id_ingredient";
-        $updateStmt = $this->db->getConnection()->prepare($updateQuery);
-        $updateStmt->bindParam(':id', $idRecetteIngredient);
-        $updateStmt->bindParam(':id_recette', $idRecette);
-        $updateStmt->bindParam(':id_ingredient', $idIngredient);
-        $updateStmt->bindParam(':quantite', $nouvelleQuantite);
-        $updateStmt->execute();
-
-        return $updateStmt;
-    } else {
-        // L'ingrédient n'existe pas
-        echo "L'ingrédient avec l'ID " . $idRecetteIngredient . " n'existe pas pour la recette avec l'ID " . $idRecette . " et l'ingrédient avec l'ID " . $idIngredient . ".";
-        return false;
-    }
+public function editQuantiteIngredient($recipeId, $ingredientId, $quantity) {
+    $query = "UPDATE recette_ingredient 
+              SET quantite = :quantity 
+              WHERE recette_id = :recette_id AND ingredient_id = :ingredient_id";
+    
+    $stmt = $this->db->prepare($query);
+    $stmt->bindParam(':quantity', $quantity);
+    $stmt->bindParam(':recette_id', $recipeId);
+    $stmt->bindParam(':ingredient_id', $ingredientId);
+    $stmt->execute();
 }
-
 
 
 }

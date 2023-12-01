@@ -179,41 +179,35 @@ public function deleteRecettes($id) {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
-        public function editIngredient()
-        {
-            $checkQuery = "SELECT * FROM recette_ingredient WHERE id = :id";
-            $checkStmt = $this->db->getConnection()->prepare($checkQuery);
-            $checkStmt->bindParam(':id', $this->id_ingredient);
-            $checkStmt->execute();
-        
-            if ($checkStmt->rowCount() > 0) {
-                $updateQuery = "UPDATE recette_ingredient SET quantite = :quantite WHERE id = :id";
-                $updateStmt = $this->db->getConnection()->prepare($updateQuery);
-                $updateStmt->bindParam(':id', $this->id_ingredient);
-                $updateStmt->bindParam(':quantite', $this->quantite);
-                $updateStmt->execute();
-        
-                return $updateStmt;
-            } else {
-                echo "L'ingrédient avec l'ID " . $this->id_ingredient . " n'existe pas.";
-                return false;
+     
+
+            public function getIngredients($recipeId) {
+                $query = "SELECT i.id as id_ingredient, i.nom, ri.quantite
+                          FROM recette_ingredient ri
+                          JOIN ingredients i ON ri.ingredient_id = i.id
+                          WHERE ri.recette_id = :recipe_id";
+                
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(':recipe_id', $recipeId);
+                $stmt->execute();
+
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
-        }
+
+           
         
 
-        public function getIngredientsByRecipeId($recipeId)
-        {
-            $query = "SELECT i.nom, ri.quantite
-                    FROM recette_ingredient ri
-                    JOIN ingredients i ON ri.ingredient_id = i.id
-                    WHERE ri.recette_id = :recipe_id";
+        public function getIngredientsByRecipeId($recipeId) {
+            $query = "SELECT i.id as id_ingredient, i.nom, ri.quantite
+                      FROM recette_ingredient ri
+                      JOIN ingredients i ON ri.ingredient_id = i.id
+                      WHERE ri.recette_id = :recipe_id";
             
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':recipe_id', $recipeId);
             $stmt->execute();
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
         }
         public function ajouterCategorie($nom)
         {
