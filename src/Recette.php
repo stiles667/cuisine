@@ -110,14 +110,21 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
 }
 
 
-        public function deleteRecettes($id)
-        {
-            $query = "DELETE FROM recettes WHERE id = :id";
-            $stmt = $this->db->getConnection()->prepare($query);
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            return $stmt;
-        }
+public function deleteRecettes($id) {
+    // First, handle associated records in recette_ingredient table
+    $queryDeleteRecetteIngredient = "DELETE FROM recette_ingredient WHERE recette_id = :id";
+    $stmtDeleteRecetteIngredient = $this->db->prepare($queryDeleteRecetteIngredient);
+    $stmtDeleteRecetteIngredient->bindParam(':id', $id);
+    $stmtDeleteRecetteIngredient->execute();
+
+    // Then, delete the recipe from the recettes table
+    $queryDeleteRecette = "DELETE FROM recettes WHERE id = :id";
+    $stmtDeleteRecette = $this->db->prepare($queryDeleteRecette);
+    $stmtDeleteRecette->bindParam(':id', $id);
+    $stmtDeleteRecette->execute();
+
+    return $stmtDeleteRecette; // Or handle success/failure accordingly
+}
 
         public function editRecettes()
         {

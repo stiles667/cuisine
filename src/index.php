@@ -22,58 +22,86 @@
     </div>
 </header>
 
-    <main>
-        <?php
-        // Connexion à la base de données
-        $servername = "localhost";
-        $username = "root";
-        $password = "Khaled";
-        $dbname = "cuisine";
+<main>
+    <?php
+    // Connexion à la base de données
+    $servername = "localhost";
+    $username = "root";
+    $password = "Khaled";
+    $dbname = "cuisine";
 
-        $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
-        if ($conn->connect_error) {
-            die("La connexion a échoué : " . $conn->connect_error);
+    if ($conn->connect_error) {
+        die("La connexion a échoué : " . $conn->connect_error);
+    }
+
+    // Récupérer les recettes avec leurs détails
+    $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom
+              FROM recettes
+              INNER JOIN categories ON recettes.id_categorie = categories.id";
+
+    $result = $conn->query($query);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $recetteId = $row["recette_id"];
+            $nomRecette = $row["recette_nom"];
+            $categorieNom = $row["categorie_nom"];
+    ?>
+            <section class="recette">
+                <div class="content">
+                    <h2><?= $nomRecette ?></h2>
+                    <p>Catégorie : <?= $categorieNom ?></p>
+                    <p>
+                        <a href="afficherRecette.php?recette_id=<?= $recetteId ?>">Voir la recette</a>
+                    </p>
+                    <p>
+                        <a href="modif.php?id=<?= $recetteId ?>">Modifier la recette</a>
+                    </p>
+                    <form method="post" action="index.php">
+                        <input type="hidden" name="delete_id" value="<?= $recetteId ?>">
+                        <button type="submit" name="delete_recette">Supprimer</button>
+                    </form>
+                </div>
+            </section>
+            
+    <?php
+    ob_start();
         }
+    } else {
+        echo "Aucune recette trouvée.";
+    }
 
-        // Récupérer les recettes avec leurs détails
-        $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom
-                  FROM recettes
-                  INNER JOIN categories ON recettes.id_categorie = categories.id";
-                  
+    require_once "config.php";
+require_once "Recette.php";
 
-        $result = $conn->query($query);
+// Check if the form was submitted for recipe deletion
+if (isset($_POST['delete_recette'])) {
+    $recette_id = $_POST['delete_id'];
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $recetteId = $row["recette_id"];
-                $nomRecette = $row["recette_nom"];
-                $categorieNom = $row["categorie_nom"];
-        ?>
-                <section class="recette">
-                    <div class="content">
-                        <h2><?= $nomRecette ?></h2>
-                        <p>Catégorie : <?= $categorieNom ?></p>
-                        <p>
-                            <a href="afficherRecette.php?recette_id=<?= $recetteId ?>">Voir la recette</a>
-                        </p>
-                        <p>
-                             <a href="modif.php?id=<?= $recetteId ?>">Modifier la recette</a>
-                        </p>
-                    </div>
-                </section>
-        <?php
-            }
-        } else {
-            echo "Aucune recette trouvée.";
-        }
+    $database = new Database();
+    $db = $database->getConnection();
+    $recette = new Recette($db);
 
-        $conn->close();
-        ?>
-    </main>
+    $result = $recette->deleteRecettes($recette_id);
 
-    <footer>
-        <p>&copy; <?= date("Y"); ?> Recettes de cuisine</p>
-    </footer>
+    if ($result) {
+        // Redirect after successful deletion
+        header("Location: index.php");
+        exit();
+    } else {
+        echo "Une erreur s'est produite lors de la suppression de la recette.";
+    }
+}
+
+    $conn->close();
+    ob_end_flush();
+    ?>
+</main>
+
+<footer>
+    <p>&copy; <?= date("Y"); ?> Recettes de cuisine</p>
+</footer>
 </body>
 </html>
