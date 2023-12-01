@@ -18,17 +18,5 @@ class Categorie
         $stmt->execute();
         return $stmt;
     }
-    public function ajouterCategorie($nom)
-{
-    $query = "INSERT INTO categories (nom) VALUES (:nom)";
-    $stmt = $this->db->prepare($query);
-
-    $stmt->bindParam(":nom", $nom);
-
-    if ($stmt->execute()) {
-        return true;
-    }
-
-    return false;
-}
+    
 }

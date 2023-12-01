@@ -11,11 +11,6 @@
         <a href="ajout.php">
             <button>Ajouter une recette</button>
         </a>
-        <form action="recherche.php" method="get">
-            <label for="search">Rechercher une recette : </label>
-            <input type="text" id="search" name="search">
-            <input type="submit" value="Rechercher">
-        </form>
     </header>
 
     <main>
@@ -23,7 +18,7 @@
         // Connexion à la base de données
         $servername = "localhost";
         $username = "root";
-        $password = "ilyass";
+        $password = "1Aqzsedrf!";
         $dbname = "cuisine";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
