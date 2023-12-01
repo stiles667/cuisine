@@ -67,9 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo '<ul>';
             foreach ($ingredients as $ingredient) {
                 echo '<li>';
-                echo 'Ingredient Name: <input type="text" name="ingredients[' . $ingredient['id_recette_ingredient'] . '][nom]" value="' . $ingredient['nom'] . '">';
-                echo 'Quantity: <input type="text" name="ingredients[' . $ingredient['id_recette_ingredient'] . '][quantite]" value="' . (isset($ingredient['quantite']) ? $ingredient['quantite'] : '') . '">';
-                echo '<input type="hidden" name="ingredients[' . $ingredient['id_recette_ingredient'] . '][id_recette_ingredient]" value="' . $ingredient['id_recette_ingredient'] . '">';
+                echo 'Ingredient Name: <input type="text" name="ingredients[' . $ingredient['id'] . '][nom]" value="' . $ingredient['nom'] . '">';
+                echo 'Quantity: <input type="text" name="ingredients[' . $ingredient['id'] . '][quantite]" value="' . (isset($ingredient['quantite']) ? $ingredient['quantite'] : '') . '">';
+                echo '<input type="hidden" name="ingredients[' . $ingredient['id'] . '][id_recette_ingredient]" value="' . $ingredient['id_recette_ingredient'] . '">';
                 echo '</li>';
             }
             echo '</ul>';

@@ -23,7 +23,7 @@
     if (isset($_GET['search'])) {
         $servername = "localhost";
         $username = "root";
-        $password = "Khaled";
+        $password = "ilyass";
         $dbname = "cuisine";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
