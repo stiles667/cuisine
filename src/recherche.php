@@ -6,16 +6,20 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <header>
-        <h1>Bienvenue dans notre collection de recettes</h1>
-        <a href="ajout.php">
-            <button>Ajouter une recette</button>
-        </a>
+    <h1>Bienvenue dans notre collection de recettes</h1>
+    <div class="header-right">
         <form action="recherche.php" method="get">
             <label for="search">Rechercher une recette : </label>
             <input type="text" id="search" name="search">
             <input type="submit" value="Rechercher">
         </form>
-    </header>
+        <div class="button-wrapper">
+            <a href="ajout.php">
+                <button>Ajouter une recette</button>
+            </a>
+        </div>
+    </div>
+</header>
 <body>
     <?php
     // recherche.php
