@@ -1,6 +1,4 @@
 <?php
-// recherche.php
-
 if (isset($_GET['search'])) {
     $servername = "localhost";
     $username = "root";

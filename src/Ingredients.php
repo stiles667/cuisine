@@ -58,7 +58,15 @@ public function deleteIngredient($ingredientId)
         $stmt->execute();
         return $stmt;
     }
-    
+    public function getIngredientById($ingredientId) {
+        $query = "SELECT * FROM ingredients WHERE id = :ingredientId";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":ingredientId", $ingredientId);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
+
 
 ?>

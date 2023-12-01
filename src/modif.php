@@ -17,17 +17,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $recipe->ustensiles = $_POST['ustensiles'];
         $recipe->id_categorie = $_POST['id_categorie'];
 
-
         // Effectuez la modification de la recette
         $result = $recipe->editRecettes();
 
-        // Effectuez la modification des ingrédients
+        // Effectuez la modification ou l'ajout des ingrédients
         $ingredients = $_POST['ingredients'];
         foreach ($ingredients as $ingredientId => $ingredientData) {
             $recipe->id_ingredient = $ingredientId;
             $recipe->nom = $ingredientData['nom'];
             $recipe->quantite = $ingredientData['quantite'];
-            $recipe->editIngredient();
+
+            // Vérifiez si l'ingrédient existe dans la table ingredients
+            $existingIngredient = $ingredientsManager->getIngredientById($ingredientId);
+
+            if ($existingIngredient) {
+                // L'ingrédient existe, effectuez la modification
+                $recipe->editIngredient();
+            } else {
+                // L'ingrédient n'existe pas, ajoutez-le
+                $recipe->ajouterIngredient($recipe->nom, $recipe->quantite, $recipe->id);
+            }
         }
 
         if ($result) {
@@ -71,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo 'Quantity: <input type="text" name="ingredients[' . $ingredient['id'] . '][quantite]" value="' . (isset($ingredient['quantite']) ? $ingredient['quantite'] : '') . '">';
                 echo '<input type="hidden" name="ingredients[' . $ingredient['id'] . '][id]" value="' . $ingredient['id'] . '">';
                 echo '</li>';
-                
             }
             echo '</ul>';
 
