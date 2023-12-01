@@ -17,14 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $recipe->ustensiles = $_POST['ustensiles'];
         $recipe->id_categorie = $_POST['id_categorie'];
 
+
         // Effectuez la modification de la recette
         $result = $recipe->editRecettes();
 
         // Effectuez la modification des ingrédients
         $ingredients = $_POST['ingredients'];
-        foreach ($ingredients as $ingredient) {
-            $recipe->id_ingredient = $ingredient['id'];
-            $recipe->nom = $ingredient['nom'];
+        foreach ($ingredients as $ingredientId => $ingredientData) {
+            $recipe->id_ingredient = $ingredientId;
+            $recipe->nom = $ingredientData['nom'];
+            $recipe->quantite = $ingredientData['quantite'];
             $recipe->editIngredient();
         }
 
@@ -66,9 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             foreach ($ingredients as $ingredient) {
                 echo '<li>';
                 echo 'Ingredient Name: <input type="text" name="ingredients[' . $ingredient['id'] . '][nom]" value="' . $ingredient['nom'] . '">';
-                echo 'Quantity: <input type="text" name="ingredients[' . $ingredient['id'] . '][quantite]" value="' . $ingredient['quantite'] . '">';
+                echo 'Quantity: <input type="text" name="ingredients[' . $ingredient['id'] . '][quantite]" value="' . (isset($ingredient['quantite']) ? $ingredient['quantite'] : '') . '">';
                 echo '<input type="hidden" name="ingredients[' . $ingredient['id'] . '][id]" value="' . $ingredient['id'] . '">';
                 echo '</li>';
+                
             }
             echo '</ul>';
 
@@ -82,28 +85,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Recipe</title>
-</head>
-<body>
-<h1>Choisissez une recette à modifier :</h1>
-
-<!-- Formulaire pour modifier une recette -->
-<h2>Edit Recipe</h2>
-<form action="modif.php?id=<?php echo $id; ?>" method="post">
-    Recipe Name: <input type="text" name="nom" value="<?php echo $recipeData['nom']; ?>"><br>
-    Image URL: <input type="text" name="image" value="<?php echo $recipeData['image']; ?>"><br>
-    Difficulty: <input type="text" name="difficulte" value="<?php echo $recipeData['difficulte']; ?>"><br>
-    Preparation Time (minutes): <input type="text" name="temps_preparation" value="<?php echo $recipeData['temps_preparation']; ?>"><br>
-    Utensils: <input type="text" name="ustensiles" value="<?php echo $recipeData['ustensiles']; ?>"><br>
-    Category: <input type="text" name="id_categorie" value="<?php echo $recipeData['id_categorie']; ?>"><br>
-    <input type="submit" value="Submit">
-</form>
-
-</body>
-</html>
