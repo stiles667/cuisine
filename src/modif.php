@@ -1,9 +1,12 @@
 <?php
 require './Recette.php';
+
 require './config.php';
 
-$your_db_instance = new Database();
-$recipe = new Recette($your_db_instance);
+$database = new Database();
+$db = $database->getConnection();
+$recipe = new Recette($db);
+$ingredientsManager = new Ingredients($db);
 
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 
@@ -17,17 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $recipe->ustensiles = $_POST['ustensiles'];
         $recipe->id_categorie = $_POST['id_categorie'];
 
-
         // Effectuez la modification de la recette
         $result = $recipe->editRecettes();
 
-        // Effectuez la modification des ingrédients
+        // Effectuez la modification ou l'ajout des ingrédients
         $ingredients = $_POST['ingredients'];
         foreach ($ingredients as $ingredientId => $ingredientData) {
-            $recipe->id_ingredient = $ingredientId;
-            $recipe->nom = $ingredientData['nom'];
-            $recipe->quantite = $ingredientData['quantite'];
-            $recipe->editIngredient();
+            $idIngredient = $ingredientData['id_ingredient'];
+            $nomIngredient = isset($ingredientData['nom']) ? $ingredientData['nom'] : '';
+            $quantiteIngredient = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
+
+            // Modifiez la quantité dans la table recette_ingredient
+            $ingredientsManager->editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngredient, $nouvelleQuantite);
+
         }
 
         if ($result) {
@@ -64,16 +69,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Affichez les ingrédients
             echo '<h2>Ingredients</h2>';
-            echo '<ul>';
             foreach ($ingredients as $ingredient) {
-                echo '<li>';
-                echo 'Ingredient Name: <input type="text" name="ingredients[' . $ingredient['id'] . '][nom]" value="' . $ingredient['nom'] . '">';
-                echo 'Quantity: <input type="text" name="ingredients[' . $ingredient['id'] . '][quantite]" value="' . (isset($ingredient['quantite']) ? $ingredient['quantite'] : '') . '">';
-                echo '<input type="hidden" name="ingredients[' . $ingredient['id'] . '][id]" value="' . $ingredient['id'] . '">';
-                echo '</li>';
-                
+                // Vérifier si la clé 'id_ingredient' existe avant de l'utiliser
+                $idIngredient = isset($ingredient['id_ingredient']) ? $ingredient['id_ingredient'] : '';
+
+                echo '<input type="hidden" name="ingredients[' . $idIngredient . '][id_ingredient]" value="' . $idIngredient . '">';
+                echo 'Ingredient Name: <input type="text" name="ingredients[' . $idIngredient . '][nom]" value="' . $ingredient['nom'] . '">';
+                echo 'Quantity: <input type="text" name="ingredients[' . $idIngredient . '][quantite]" value="' . $ingredient['quantite'] . '"><br>';
             }
-            echo '</ul>';
 
             echo '<input type="submit" value="Submit">';
             echo '</form>';
