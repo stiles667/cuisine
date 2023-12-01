@@ -1,33 +1,50 @@
 <?php
-include_once 'src/Recette.php';
+require_once 'src/Recette.php';
 
 use PHPUnit\Framework\TestCase;
 
 class RecetteTest extends TestCase
-
 {
+    private $userManager;
+    private $db;
 
-    public function setUp(): void{
+    public function setUp(): void
+    {
+        // Configuration de la base de données pour les tests
         $this->configureDatabase();
-        $this->userManager = new Recette ($this->db);
-
-
+        $this->userManager = new Recette($this->db);
     }
-    private function configureDatabase():void {
-        $this->db = new DB(sprintf(
-            'mysql:host=%s;port=%d;dbname=%s',
-            getenv('DB_HOST'),
-            getenv('DB_PORT'),
-            getenv('DB_DATABASE')
-        ), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
 
+    private function configureDatabase(): void
+    {
+        
+        $this->db = new PDO('mysql:host=localhost;dbname=test_database;charset=utf8', 'username', 'password');
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
-    // here we going to test the delete recette function
+
+    // Test de la fonction deleteRecettes
     public function testDeleteRecette()
     {
-        $result = $this->userManager->deleteRecettes(1);
+       
+        $this->userManager->ajouterRecette(/* paramètres de la recette */);
+
+        
+        $lastInsertedId = $this->db->lastInsertId();
+
+        // Suppression de la recette
+        $result = $this->userManager->deleteRecettes($lastInsertedId);
+
+        
         $this->assertEquals(1, $result->rowCount());
     }
 
+    // Test de la fonction ajouterRecette
+    public function testAjouterRecette()
+    {
+        
+        $result = $this->userManager->ajouterRecette(/* paramètres de la recette */);
+
+        
+        $this->assertNotEquals(false, $result);
+    }
 }

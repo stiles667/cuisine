@@ -50,7 +50,7 @@
                 $recetteId = $row["recette_id"];
                 $nomRecette = $row["recette_nom"];
                 $categorieNom = $row["categorie_nom"];
-                ?>
+        ?>
                 <section class="recette">
                     <div class="content">
                         <h2><?= $nomRecette ?></h2>
@@ -61,15 +61,44 @@
                         <p>
                             <a href="modif.php?id=<?= $recetteId ?>">Modifier la recette</a>
                         </p>
+                        <form method="post" action="index.php">
+                            <input type="hidden" name="delete_id" value="<?= $recetteId ?>">
+                            <button type="submit" name="delete_recette">Supprimer</button>
+                        </form>
                     </div>
                 </section>
-                <?php
+                
+        <?php
+        ob_start();
             }
         } else {
-            echo "Aucune recette trouvée pour la recherche : $searchTerm";
+            echo "Aucune recette trouvée.";
         }
-
+    
+        require_once "config.php";
+    require_once "Recette.php";
+    
+    // Check if the form was submitted for recipe deletion
+    if (isset($_POST['delete_recette'])) {
+        $recette_id = $_POST['delete_id'];
+    
+        $database = new Database();
+        $db = $database->getConnection();
+        $recette = new Recette($db);
+    
+        $result = $recette->deleteRecettes($recette_id);
+    
+        if ($result) {
+            // Redirect after successful deletion
+            header("Location: index.php");
+            exit();
+        } else {
+            echo "Une erreur s'est produite lors de la suppression de la recette.";
+        }
+    }
+    
         $conn->close();
+        ob_end_flush();
     } else {
         echo "Aucun terme de recherche spécifié.";
     }

@@ -47,6 +47,37 @@ h1 {
     margin-left: 10px;
 }
 
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="submit"],
+.button-wrapper button {
+    padding: 8px 12px; /* Ajustement de la taille des boutons */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+input[type="submit"],
+.button-wrapper button {
+    background-color: #090909;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover,
+.button-wrapper button:hover {
+    background-color: #1d1d1e;
+}
+
 
 /* Style pour la section recette */
 .recette {
@@ -109,6 +140,12 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+
+
+button[type="submit"][name="delete_recette"] {
+    padding: 12px 20px; /* Ajustez les valeurs de padding pour augmenter la taille */
+    font-size: 18px; /* Augmenter la taille du texte */
 }
 
 
