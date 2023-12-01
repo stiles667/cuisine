@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo 'L\'ID de la recette n\'est pas fourni.';
         exit;
     }
+    
 
     // Si l'ID est défini dans l'URL, affichez le formulaire de modification
     if (isset($_GET['id'])) {
