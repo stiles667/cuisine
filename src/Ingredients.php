@@ -12,16 +12,15 @@ class Ingredients
         $this->db = $db;
     }
 
-    public function ajouterIngredient($nom, $quantite, $recette_id)
+    public function ajouterIngredient($nom, $recette_id)
     {
-        $query = "INSERT INTO ingredients (nom, quantite, recette_id) VALUES (?, ?, ?)";
+        $query = "INSERT INTO ingredients (nom, recette_id) VALUES (?, ?)";
         $stmt = $this->db->prepare($query);
 
         $nom = htmlspecialchars(strip_tags($nom));
-        $quantite = htmlspecialchars(strip_tags($quantite));
         $recette_id = htmlspecialchars(strip_tags($recette_id));
 
-        $stmt->execute([$nom, $quantite, $recette_id]);
+        $stmt->execute([$nom, $recette_id]);
     }
 
     public function ajouterRecetteIngredient($recette_id, $ingredient_id, $quantite)

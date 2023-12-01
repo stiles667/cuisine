@@ -5,7 +5,6 @@ require './config.php';
 $your_db_instance = new Database();
 $recipe = new Recette($your_db_instance);
 
-
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($ingredients as $ingredient) {
             $recipe->id_ingredient = $ingredient['id'];
             $recipe->nom = $ingredient['nom'];
-            $recipe->quantite = $ingredient['quantite'];
             $recipe->editIngredient();
         }
 
@@ -54,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($recipeData) {
             // Affichez le formulaire de modification
             echo '<h2>Edit Recipe</h2>';
-            echo '<form action="modif.php" method="post">';
+            echo '<form action="modif.php?id=' . $id . '" method="post">';
             echo '<input type="hidden" name="id" value="' . $recipeData['id'] . '">';
             echo 'Recipe Name: <input type="text" name="nom" value="' . $recipeData['nom'] . '"><br>';
             echo 'Image URL: <input type="text" name="image" value="' . $recipeData['image'] . '"><br>';
@@ -83,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo 'L\'ID de la recette n\'est pas fourni.';
     }
+}
 ?>
 
 <!DOCTYPE html>
@@ -95,9 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 <h1>Choisissez une recette à modifier :</h1>
 
-
+<!-- Formulaire pour modifier une recette -->
 <h2>Edit Recipe</h2>
-
 <form action="modif.php?id=<?php echo $id; ?>" method="post">
     Recipe Name: <input type="text" name="nom" value="<?php echo $recipeData['nom']; ?>"><br>
     Image URL: <input type="text" name="image" value="<?php echo $recipeData['image']; ?>"><br>
@@ -110,5 +108,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </body>
 </html>
-
-<?php } ?>

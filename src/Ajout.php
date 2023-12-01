@@ -1,8 +1,6 @@
 <?php
-
-include_once './config.php';
-include_once './Recette.php';
-include_once './Ingredients.php';
+require './Recette.php';
+require './config.php';
 
 $database = new Database();
 $db = $database->getConnection();
@@ -15,28 +13,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $recette->difficulte = htmlspecialchars(strip_tags($_POST['difficulte_recette']));
     $recette->temps_preparation = htmlspecialchars(strip_tags($_POST['temps_preparation']));
     $recette->ustensiles = htmlspecialchars(strip_tags($_POST['ustensiles_recette']));
-    $recette->etapes_recette = htmlspecialchars(strip_tags($_POST['etapes_recette']));
+    $recette->etapes_recette = htmlspecialchars(strip_tags($_POST['etapes_recette'])); 
+    $recette->id_categorie = htmlspecialchars(strip_tags($_POST['categorie_recette']));
+
 
     $recette_id = $recette->ajouterRecette();
 
-
-    if (isset($_POST['ingredient_nom']) && isset($_POST['ingredient_quantite'])) {
-        $ingredient_noms = $_POST['ingredient_nom'];
-        $ingredient_quantites = $_POST['ingredient_quantite'];
-
-        foreach ($ingredient_noms as $key => $ingredient_nom) {
-            $ingredient_quantite = $ingredient_quantites[$key];
-            $ingredientsManager->ajouterIngredient($ingredient_nom, $ingredient_quantite, $recette_id);
-        }
-    }
-
     if ($recette_id) {
         echo "La recette a été ajoutée avec succès. Identifiant de la recette : $recette_id";
+        header("Location: index.php");
+        exit();
+
+        if (isset($_POST['ingredient_nom']) && isset($_POST['ingredient_quantite'])) {
+            $ingredient_noms = $_POST['ingredient_nom'];
+            $ingredient_quantites = $_POST['ingredient_quantite'];
+
+            foreach ($ingredient_noms as $key => $ingredient_nom) {
+                $ingredient_quantite = $ingredient_quantites[$key];
+                $ingredientsManager->ajouterIngredient($ingredient_nom, $ingredient_quantite, $recette_id);
+            }
+        } else {
+            echo "Aucun ingrédient spécifié.";
+        }
+        
     } else {
         echo "Erreur lors de l'ajout de la recette.";
     }
 }
-
 ?>
 
 
@@ -68,6 +71,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label for="etapes_recette">Étapes de la recette:</label>
         <textarea name="etapes_recette" rows="4" cols="50" required></textarea><br>
+
+        <!-- Ajout du menu déroulant pour les catégories -->
+        <label for="categorie_recette">Catégorie de la recette:</label>
+        <select name="categorie_recette">
+            <?php
+            // Récupérer les catégories de recettes depuis la méthode getCategories() de votre classe Recette
+            $categories = $recette->getCategories();
+
+            // Affichage des catégories dans le menu déroulant
+            foreach ($categories as $categorie) {
+                echo '<option value="' . $categorie['id'] . '">' . $categorie['nom'] . '</option>';
+            }
+            ?>
+        </select><br>
 
         <h3>Ingrédients:</h3>
         <div id="ingredients-container">
