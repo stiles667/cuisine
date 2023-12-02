@@ -18,7 +18,7 @@ class IngredientsTest extends TestCase
     private function configureDatabase(): void
     {
         
-        $this->db = new PDO('mysql:host=localhost;dbname=test_database;charset=utf8', 'username', 'password');
+        $this->db = new PDO('mysql:host=localhost;dbname=cuisine;charset=utf8', 'root', '1Aqzsedrf!');
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
