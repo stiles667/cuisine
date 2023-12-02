@@ -1,5 +1,5 @@
     <?php
-    require './Ingredients.php';
+    require 'Ingredients.php';
 
 class Recette
 {
@@ -55,6 +55,10 @@ class Recette
     $stmtRecette->bindParam(":nom_recette", $this->nom);
     $stmtRecette->bindParam(":image_recette", $this->image);
     $stmtRecette->bindParam(":difficulte_recette", $this->difficulte);
+    if (!is_numeric($this->temps_preparation)) {
+        echo "Le temps de préparation doit être un nombre entier.";
+        return false;
+    }
     $stmtRecette->bindParam(":temps_preparation", $this->temps_preparation);
     $stmtRecette->bindParam(":ustensiles_recette", $this->ustensiles);
     $stmtRecette->bindParam(":etapes_recette", $this->etapes_recette);
