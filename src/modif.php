@@ -23,24 +23,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Effectuez la modification de la recette
         $result = $recipe->editRecettes();
 
-        $ingredients = $_POST['ingredients'];
-        foreach ($ingredients as $ingredientId => $ingredientData) {
-            // Print the ingredient data to debug
-            echo "<pre>";
-            print_r($ingredientData);
-            echo "</pre>";
-            $idIngredient = isset($ingredientData['id_ingredient']) ? $ingredientData['id_ingredient'] : '';
-            $nomIngredient = isset($ingredientData['nom']) ? $ingredientData['nom'] : '';
-            $quantiteIngredient = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
+        // $ingredients = $_POST['ingredients'];
+        // foreach ($ingredients as $ingredientId => $ingredientData) {
+        //     // Print the ingredient data to debug
+        //     echo "<pre>";
+        //     print_r($ingredientData);
+        //     echo "</pre>";
+        //     $idIngredient = isset($ingredientData['id_ingredient']) ? $ingredientData['id_ingredient'] : '';
+        //     $nomIngredient = isset($ingredientData['nom']) ? $ingredientData['nom'] : '';
+        //     $quantiteIngredient = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
 
-            // Define the variables before using them
-            $idRecetteIngredient = isset($ingredientData['id']) ? $ingredientData['id'] : null;
-            $idRecette = isset($ingredientData['recette_id']) ? $ingredientData['recette_id'] : null;
-            $nouvelleQuantite = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : null;
+        //     // Define the variables before using them
+        //     $idRecetteIngredient = isset($ingredientData['id']) ? $ingredientData['id'] : null;
+        //     $idRecette = isset($ingredientData['recette_id']) ? $ingredientData['recette_id'] : null;
+        //     $nouvelleQuantite = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : null;
 
-            // Modifiez la quantité dans la table recette_ingredient
-            $ingredientsManager->editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngredient, $nouvelleQuantite);
-        }
+        //     // Modifiez la quantité dans la table recette_ingredient
+        //     $ingredientsManager->editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngredient, $nouvelleQuantite);
+        // }
 
         if ($result) {
             echo 'La recette a été modifiée avec succès.';
