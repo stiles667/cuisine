@@ -27,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($ingredients as $ingredientId => $ingredientData) {
             $idIngredient = $ingredientId; // Utilisez la clé actuelle comme ID de l'ingrédient
             $nomIngredient = isset($ingredientData['nom']) ? $ingredientData['nom'] : '';
-            $quantiteIngredient = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
+            $quantiteIngredient = isset($ingredientData['quantite']) ? intval($ingredientData['quantite']) : 0;
 
             // Modifiez la quantité dans la table recette_ingredient
-            $ingredientsManager->editQuantiteIngredient($idIngredient, $id, $idIngredient, $quantiteIngredient);
+            $ingredientsManager->editQuantiteIngredient($idIngredient, $id, $quantiteIngredient);
         }
 
         if ($result) {
@@ -67,14 +67,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Affichez les ingrédients
             echo '<h2>Ingredients</h2>';
-            foreach ($ingredients as $ingredient) {
-                // Vérifier si la clé 'id_ingredient' existe avant de l'utiliser
-                $idIngredient = isset($ingredient['ingredient_id']) ? $ingredient['ingredient_id'] : '';
+            foreach ($ingredients as $ingredientId => $ingredientData) {
+                $idIngredient = $ingredientId;
+                $nomIngredient = isset($ingredientData['nom']) ? $ingredientData['nom'] : '';
+                $quantiteIngredient = isset($ingredientData['quantite']) ? intval($ingredientData['quantite']) : 0;
 
-                echo '<input type="hidden" name="ingredients[' . $idIngredient . '][ingredient_id]" value="' . $idIngredient . '">';
-                echo 'Ingredient Name: <input type="text" name="ingredients[' . $idIngredient . '][nom]" value="' . $ingredient['nom'] . '">';
-                echo 'Quantity: <input type="text" name="ingredients[' . $idIngredient . '][quantite]" value="' . $ingredient['quantite'] . '"><br>';
-            }
+                    echo '<input type="hidden" name="ingredients[' . $idIngredient . '][id_ingredient]" value="' . $idIngredient . '">';
+                    echo 'Ingredient Name: <input type="text" name="ingredients[' . $idIngredient . '][nom]" value="' . $nomIngredient . '">';
+                    echo 'Quantity: <input type="text" name="ingredients[' . $idIngredient . '][quantite]" value="' . $quantiteIngredient . '"><br>';
+                    
+                    // Ajoutez l'appel pour changer la quantité de l'ingrédient
+                    $nouvelleQuantiteIngredient = isset($_POST['ingredients'][$idIngredient]['quantite']) ? $_POST['ingredients'][$idIngredient]['quantite'] : '';
+
+                    // Vérifiez si la quantité a été modifiée avant de la mettre à jour dans la base de données
+                    if ($nouvelleQuantiteIngredient !== $quantiteIngredient) {
+                        // Si la quantité a changé, mettez à jour la quantité de l'ingrédient dans la table 'recette_ingredient'
+                        $ingredientsManager->editQuantiteIngredient($idIngredient, $id, $quantiteIngredient);
+                    }
+                }
+
+
             
 
             echo '<input type="submit" value="Submit">';

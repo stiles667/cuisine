@@ -67,65 +67,30 @@ public function deleteIngredient($ingredientId)
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    public function editIngredient($id, $nom)
+    public function editQuantiteIngredient($idRecetteIngredient, $idIngredient, $nouvelleQuantite)
 {
-    $checkQuery = "SELECT * FROM ingredients WHERE id = :id";
-    $checkStmt = $this->db->prepare($checkQuery);
-    $checkStmt->bindParam(':id', $id);
-    $checkStmt->execute();
+    // Vérifiez si la quantité est non nulle et si elle est numérique
+    $nouvelleQuantite = intval($nouvelleQuantite);
 
-    if ($checkStmt->rowCount() > 0) {
-        $updateQuery = "UPDATE ingredients SET nom = :nom WHERE id = :id";
-        $updateStmt = $this->db->prepare($updateQuery);
-        $updateStmt->bindParam(':id', $id);
-        $updateStmt->bindParam(':nom', $nom);
-        $updateStmt->execute();
+    if (is_numeric($nouvelleQuantite)) {
+        // Mettez à jour la quantité de l'ingrédient pour la recette spécifiée
+        $query = "UPDATE recette_ingredient 
+                  SET quantite = :nouvelle_quantite 
+                  WHERE id = :id_recette_ingredient";
 
-        return $updateStmt;
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bindParam(":nouvelle_quantite", $nouvelleQuantite);
+        $stmt->bindParam(":id_recette_ingredient", $idRecetteIngredient);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
     } else {
-        echo "L'ingrédient avec l'ID $id n'existe pas.";
+        echo "La quantité doit être un nombre.";
         return false;
-    }
-}
-public function editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngredient, $nouvelleQuantite) {
-    // Vérifier d'abord si l'ingrédient existe
-    $checkQuery = "SELECT * FROM recette_ingredient WHERE id = :id AND recette_id = :recette_id AND ingredient_id = :ingredient_id";
-    $checkStmt = $this->db->prepare($checkQuery);
-    $checkStmt->bindParam(':id', $idRecetteIngredient);
-    $checkStmt->bindParam(':recette_id', $idRecette);
-    $checkStmt->bindParam(':ingredient_id', $idIngredient);
-    $checkStmt->execute();
-
-    if ($checkStmt->rowCount() > 0) {
-        // L'ingrédient existe, effectuer la mise à jour
-        $updateQuery = "UPDATE recette_ingredient SET quantite = :quantite WHERE id = :id AND recette_id = :recette_id AND ingredient_id = :ingredient_id";
-        $updateStmt = $this->db->prepare($updateQuery);
-        $updateStmt->bindParam(':id', $idRecetteIngredient);
-        $updateStmt->bindParam(':recette_id', $idRecette);
-        $updateStmt->bindParam(':ingredient_id', $idIngredient);
-        $updateStmt->bindParam(':quantite', $nouvelleQuantite);
-        $updateStmt->execute();
-
-        return $updateStmt;
-    } else {
-        // L'ingrédient n'existe pas, ajoutez-le
-        $queryAddIngredient = "INSERT INTO ingredients (nom) VALUES (:nom)";
-        $stmtAddIngredient = $this->db->prepare($queryAddIngredient);
-        $stmtAddIngredient->bindParam(':nom', $idIngredient); // Vous devrez peut-être ajuster cela selon vos besoins
-        $stmtAddIngredient->execute();
-
-        // Récupérez l'ID de l'ingrédient nouvellement ajouté
-        $newIngredientId = $this->db->lastInsertId();
-
-        // Ajoutez l'entrée dans recette_ingredient
-        $addRecetteIngredientQuery = "INSERT INTO recette_ingredient (recette_id, ingredient_id, quantite) VALUES (:recette_id, :ingredient_id, :quantite)";
-        $addRecetteIngredientStmt = $this->db->prepare($addRecetteIngredientQuery);
-        $addRecetteIngredientStmt->bindParam(':recette_id', $idRecette);
-        $addRecetteIngredientStmt->bindParam(':ingredient_id', $newIngredientId);
-        $addRecetteIngredientStmt->bindParam(':quantite', $nouvelleQuantite);
-        $addRecetteIngredientStmt->execute();
-
-        return $addRecetteIngredientStmt;
     }
 }
 
