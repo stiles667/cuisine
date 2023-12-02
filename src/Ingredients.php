@@ -91,7 +91,7 @@ public function editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngr
     if (!is_numeric($nouvelleQuantite) || $nouvelleQuantite == '') {
         echo "Quantite must be a valid integer";
         return;
-    }
+    }   
 
     // Vérifier d'abord si l'ingrédient existe
     $checkQuery = "SELECT * FROM recette_ingredient WHERE id = :id AND recette_id = :recette_id AND ingredient_id = :ingredient_id";
