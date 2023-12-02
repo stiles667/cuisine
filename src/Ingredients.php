@@ -88,6 +88,11 @@ public function deleteIngredient($ingredientId)
     }
 }
 public function editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngredient, $nouvelleQuantite) {
+    if (!is_numeric($nouvelleQuantite) || $nouvelleQuantite == '') {
+        echo "Quantite must be a valid integer";
+        return;
+    }   
+
     // Vérifier d'abord si l'ingrédient existe
     $checkQuery = "SELECT * FROM recette_ingredient WHERE id = :id AND recette_id = :recette_id AND ingredient_id = :ingredient_id";
     $checkStmt = $this->db->prepare($checkQuery);
@@ -95,8 +100,10 @@ public function editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngr
     $checkStmt->bindParam(':recette_id', $idRecette);
     $checkStmt->bindParam(':ingredient_id', $idIngredient);
     $checkStmt->execute();
+    
 
     if ($checkStmt->rowCount() > 0) {
+        
         // L'ingrédient existe, effectuer la mise à jour
         $updateQuery = "UPDATE recette_ingredient SET quantite = :quantite WHERE id = :id AND recette_id = :recette_id AND ingredient_id = :ingredient_id";
         $updateStmt = $this->db->prepare($updateQuery);
