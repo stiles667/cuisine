@@ -93,40 +93,44 @@ input[type="submit"]:hover,
     width: 300px;
     height: 400px;
     position: relative;
+    background-size: cover;
 }
 
 .recette h2 {
-    color: #333333;
+    color: #090909;
     font-size: 24px;
     margin-bottom: 10px;
 }
 
 .recette p {
-    color: #666666;
+    color: #000000;
     font-size: 16px;
     margin-bottom: 10px;
 }
 
 .recette button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
+    background-color: #333; 
+    color: white; 
+    padding: 5px 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .recette button:hover {
-    background-color: #45a049;
+    background-color: #555; 
 }
 
+/* Contenu */
 .content {
+    font-family: 'Hanken Grotesk', sans-serif;
     position: absolute;
     bottom: 20px;
     padding: 0 20px;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.9); /* Fonds semi-transparent */
+    background-color: rgba(255, 255, 255, 0.1); 
+    color: black;
 }
 
 

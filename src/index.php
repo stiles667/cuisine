@@ -37,9 +37,9 @@
     }
 
     // Récupérer les recettes avec leurs détails
-    $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom
-              FROM recettes
-              INNER JOIN categories ON recettes.id_categorie = categories.id";
+    $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom, recettes.image AS image_url
+    FROM recettes
+    INNER JOIN categories ON recettes.id_categorie = categories.id";
 
     $result = $conn->query($query);
 
@@ -48,8 +48,17 @@
             $recetteId = $row["recette_id"];
             $nomRecette = $row["recette_nom"];
             $categorieNom = $row["categorie_nom"];
+            $imageUrl = $row["image_url"];
+
+            if (isset($imageUrl)) {
+                // Affiche la section de recette avec l'image en background
+                echo '<section class="recette" style="background-image: url(\'' . $imageUrl . '\');">';
+            } else {
+                // Affiche la section de recette sans image en background
+                echo '<section class="recette">';
+            }
     ?>
-            <section class="recette">
+            
                 <div class="content">
                     <h2><?= $nomRecette ?></h2>
                     <p>Catégorie : <?= $categorieNom ?></p>
