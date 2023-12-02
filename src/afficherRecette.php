@@ -2,42 +2,49 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Recette</title>
+    <title>Recettes</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>Détails de la recette</h1>
+    <h1>Liste des recettes</h1>
 
     <?php
-    if (isset($_GET['recette_id'])) {
-        include_once 'config.php';
+    include_once 'config.php';
 
-        $db = new Database();
-        $conn = $db->getConnection();
+    $db = new Database();
+    $conn = $db->getConnection();
 
-        $recette_id = $_GET['recette_id'];
+    // Sélectionnez toutes les recettes avec leurs détails
+    $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom, recettes.etapes_recette, recettes.temps_preparation
+              FROM recettes
+              INNER JOIN categories ON recettes.id_categorie = categories.id";
 
-        // Include temps_preparation in the query
-        $query = "SELECT recettes.nom AS recette_nom, categories.nom AS categorie_nom, ingredients.nom AS ingredient_nom, recettes.etapes_recette, recettes.temps_preparation
-                  FROM recettes
-                  INNER JOIN categories ON recettes.id_categorie = categories.id
-                  INNER JOIN ingredients ON ingredients.recette_id = recettes.id
-                  WHERE recettes.id = :recette_id";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
 
-        $stmt = $conn->prepare($query);
-        $stmt->bindParam(':recette_id', $recette_id);
-        $stmt->execute();
+    $recettes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $recetteDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($recetteDetails) {
-            $nomRecette = $recetteDetails[0]["recette_nom"];
-            $categorieNom = $recetteDetails[0]["categorie_nom"];
-            $ingredients = array_column($recetteDetails, 'ingredient_nom');
-            $etapesRecette = $recetteDetails[0]["etapes_recette"];
+    if ($recettes) {
+        // Parcours de toutes les recettes
+        foreach ($recettes as $recette) {
+            $recette_id = $recette["recette_id"];
+            $nomRecette = $recette["recette_nom"];
+            $categorieNom = $recette["categorie_nom"];
+            $etapesRecette = $recette["etapes_recette"];
             // Fetch temps_preparation
-            $tempsPreparation = $recetteDetails[0]["temps_preparation"];
+            $tempsPreparation = $recette["temps_preparation"];
+
+            // Sélectionnez les ingrédients pour chaque recette
+            $queryIngredients = "SELECT ingredients.nom AS ingredient_nom
+                                FROM ingredients
+                                WHERE ingredients.recette_id = :recette_id";
+
+            $stmtIngredients = $conn->prepare($queryIngredients);
+            $stmtIngredients->bindParam(':recette_id', $recette_id);
+            $stmtIngredients->execute();
+
+            $ingredients = $stmtIngredients->fetchAll(PDO::FETCH_COLUMN);
 
             ?>
             <section class="recette">
@@ -58,16 +65,12 @@
                         }
                         ?>
                     </ul>
-                    
-                    <button onclick="location.href='index.php'">Retour à l'accueil</button>
                 </div>
             </section>
             <?php
-        } else {
-            echo "Aucune recette trouvée.";
         }
     } else {
-        echo "Identifiant de la recette non spécifié.";
+        echo "Aucune recette trouvée.";
     }
     ?>
 
