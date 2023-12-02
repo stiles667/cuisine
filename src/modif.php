@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     if (!$id) {
         echo 'L\'ID de la recette n\'est pas fourni.';
-        exit;
+        exit; 
     }
 
     // Si l'ID est défini dans l'URL, affichez le formulaire de modification
@@ -75,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo 'Ingredient Name: <input type="text" name="ingredients[' . $idIngredient . '][nom]" value="' . $ingredient['nom'] . '">';
                 echo 'Quantity: <input type="text" name="ingredients[' . $idIngredient . '][quantite]" value="' . $ingredient['quantite'] . '"><br>';
             }
+            
 
             echo '<input type="submit" value="Submit">';
             echo '</form>';

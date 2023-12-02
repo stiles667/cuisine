@@ -130,7 +130,6 @@ public function editQuantiteIngredient($idRecetteIngredient, $idRecette, $idIngr
 }
 
 
-
 }
 
 
