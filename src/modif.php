@@ -1,3 +1,12 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Titre de votre page</title>
+    <link rel="stylesheet" type="text/css" href="index4.css">
+    
+</head>
+<body>
 <?php
 require './Recette.php';
 require './config.php';
@@ -87,3 +96,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+</body>
+</html>
