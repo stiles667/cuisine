@@ -25,12 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Effectuez la modification ou l'ajout des ingrédients
         $ingredients = $_POST['ingredients'];
         foreach ($ingredients as $ingredientId => $ingredientData) {
-            $idIngredient = $ingredientId; // Utilisez la clé actuelle comme ID de l'ingrédient
-            $nomIngredient = isset($ingredientData['nom']) ? $ingredientData['nom'] : '';
-            $quantiteIngredient = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
+            $idIngredient = $ingredientId;
+            $nouvelleQuantite = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
 
             // Modifiez la quantité dans la table recette_ingredient
-            $ingredientsManager->editQuantiteIngredient($idIngredient, $id, $idIngredient, $quantiteIngredient);
+            $ingredientsManager->editQuantiteIngredient($idIngredient, $id, $idIngredient, $nouvelleQuantite);
         }
 
         if ($result) {
@@ -44,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     if (!$id) {
         echo 'L\'ID de la recette n\'est pas fourni.';
-        exit; 
+        exit;
     }
 
     // Si l'ID est défini dans l'URL, affichez le formulaire de modification
@@ -66,16 +65,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo 'Category: <input type="text" name="id_categorie" value="' . $recipeData['id_categorie'] . '"><br>';
 
             // Affichez les ingrédients
+            // Affichez les ingrédients
             echo '<h2>Ingredients</h2>';
             foreach ($ingredients as $ingredient) {
                 // Vérifier si la clé 'id_ingredient' existe avant de l'utiliser
                 $idIngredient = isset($ingredient['ingredient_id']) ? $ingredient['ingredient_id'] : '';
 
                 echo '<input type="hidden" name="ingredients[' . $idIngredient . '][ingredient_id]" value="' . $idIngredient . '">';
-                echo 'Ingredient Name: <input type="text" name="ingredients[' . $idIngredient . '][nom]" value="' . $ingredient['nom'] . '">';
+                echo 'Ingredient Name: ' . $ingredient['nom'] . '<br>';
                 echo 'Quantity: <input type="text" name="ingredients[' . $idIngredient . '][quantite]" value="' . $ingredient['quantite'] . '"><br>';
             }
-            
+
 
             echo '<input type="submit" value="Submit">';
             echo '</form>';
