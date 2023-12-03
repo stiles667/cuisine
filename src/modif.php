@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +19,6 @@ $ingredientsManager = new Ingredients($db);
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $tempsPreparation = isset($_POST['temps_preparation']) ? intval($_POST['temps_preparation']) : 0;
     if (isset($_POST['nom'], $_POST['image'], $_POST['difficulte'], $_POST['temps_preparation'], $_POST['ustensiles'], $_POST['id_categorie'])) {
         $recipe->id = $id;
         $recipe->nom = $_POST['nom'];
@@ -73,20 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo 'Utensils: <input type="text" name="ustensiles" value="' . $recipeData['ustensiles'] . '"><br>';
             echo 'Category: <input type="text" name="id_categorie" value="' . $recipeData['id_categorie'] . '"><br>';
 
-            $categories = $recipe->getAllCategories();
-
-    echo '<h3>Categories</h3>';
-    echo '<table>';
-    echo '<tr><th>ID</th><th>Name</th></tr>';
-    foreach ($categories as $category) {
-        echo '<tr>';
-        echo '<td>' . $category['id'] . '</td>';
-        echo '<td>' . $category['nom'] . '</td>';
-        echo '</tr>';
-    }
-    echo '</table>';
-
-            
+            // Affichez les ingrédients
             // Affichez les ingrédients
             echo '<h2>Ingredients</h2>';
             foreach ($ingredients as $ingredient) {
@@ -98,15 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo 'Quantity: <input type="text" name="ingredients[' . $idIngredient . '][quantite]" value="' . $ingredient['quantite'] . '"><br>';
             }
 
-            echo '<input type="submit" value="Submit" onclick="changeAction()">';
+
+            echo '<input type="submit" value="Submit">';
             echo '</form>';
-    
-            // Ajoutez le script JavaScript pour changer l'action avant la soumission
-            echo '<script>
-                    function changeAction() {
-                        document.forms[0].action = "index.php";
-                    }
-                  </script>';
         } else {
             echo 'La recette avec cet ID n\'existe pas.';
         }
