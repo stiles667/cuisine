@@ -85,7 +85,7 @@
     require_once "config.php";
 require_once "Recette.php";
 
-// Check if the form was submitted for recipe deletion
+
 if (isset($_POST['delete_recette'])) {
     $recette_id = $_POST['delete_id'];
 
@@ -96,7 +96,7 @@ if (isset($_POST['delete_recette'])) {
     $result = $recette->deleteRecettes($recette_id);
 
     if ($result) {
-        // Redirect after successful deletion
+        
         header("Location: index.php");
         exit();
     } else {

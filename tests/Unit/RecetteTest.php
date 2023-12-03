@@ -93,7 +93,7 @@ private function getRecipeById($id)
             return false;
         }
     } catch (PDOException $e) {
-        // Gérez l'exception selon vos besoins
+        
         echo "Erreur lors de la récupération de la recette : " . $e->getMessage();
         return false;
     }

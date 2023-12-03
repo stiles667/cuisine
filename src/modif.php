@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     echo '</table>';
 
-            // Affichez les ingrédients
+            
             // Affichez les ingrédients
             echo '<h2>Ingredients</h2>';
             foreach ($ingredients as $ingredient) {
