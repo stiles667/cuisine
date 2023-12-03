@@ -2,3 +2,4 @@ composer require --dev phpunit/phpunit pour créer le vendor et les autres fichi
 .\vendor\bin\phpunit pour lancer les tests
 ATTENTION POUR LANCER LES TESTS ILS FAUT METTRE EN COMMENTAIRE "require 'Ingredients.php';" DANS RECETTE.PHP SINON IL Y A UNE ERREUR. NOUS NE COMPRENONS PAS POURQUOI.
 La modification des ingredients n'est pas fonctionel, donc elle ete enlever de la page mais la fonction reste presente dans le fichier modif.php;
+Changement de mot de passe et nom d'utilisateur necessaire dans les fichier config.php index.php recherche.php a cause d'un probleme survenu avec le gitignore
