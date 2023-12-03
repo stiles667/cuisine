@@ -1,5 +1,5 @@
     <?php
-    require 'Ingredients.php';
+    //require 'Ingredients.php';
 
 class Recette
 {
@@ -55,11 +55,11 @@ class Recette
     $stmtRecette->bindParam(":nom_recette", $this->nom);
     $stmtRecette->bindParam(":image_recette", $this->image);
     $stmtRecette->bindParam(":difficulte_recette", $this->difficulte);
+    $stmtRecette->bindParam(":temps_preparation", $this->temps_preparation);
     if (!is_numeric($this->temps_preparation)) {
         echo "Le temps de préparation doit être un nombre entier.";
         return false;
     }
-    $stmtRecette->bindParam(":temps_preparation", $this->temps_preparation);
     $stmtRecette->bindParam(":ustensiles_recette", $this->ustensiles);
     $stmtRecette->bindParam(":etapes_recette", $this->etapes_recette);
     $stmtRecette->bindParam(":id_categorie", $this->id_categorie); 
@@ -115,20 +115,31 @@ public function ajouterIngredient($nom, $quantite, $recetteId)
 
 
 public function deleteRecettes($id) {
-    // First, handle associated records in recette_ingredient table
-    $queryDeleteRecetteIngredient = "DELETE FROM recette_ingredient WHERE recette_id = :id";
-    $stmtDeleteRecetteIngredient = $this->db->prepare($queryDeleteRecetteIngredient);
-    $stmtDeleteRecetteIngredient->bindParam(':id', $id);
-    $stmtDeleteRecetteIngredient->execute();
+    try {
+        $this->db->beginTransaction();
 
-    // Then, delete the recipe from the recettes table
-    $queryDeleteRecette = "DELETE FROM recettes WHERE id = :id";
-    $stmtDeleteRecette = $this->db->prepare($queryDeleteRecette);
-    $stmtDeleteRecette->bindParam(':id', $id);
-    $stmtDeleteRecette->execute();
+        // First, handle associated records in recette_ingredient table
+        $queryDeleteRecetteIngredient = "DELETE FROM recette_ingredient WHERE recette_id = :id";
+        $stmtDeleteRecetteIngredient = $this->db->prepare($queryDeleteRecetteIngredient);
+        $stmtDeleteRecetteIngredient->bindParam(':id', $id);
+        $stmtDeleteRecetteIngredient->execute();
 
-    return $stmtDeleteRecette; // Or handle success/failure accordingly
+        // Then, delete the recipe from the recettes table
+        $queryDeleteRecette = "DELETE FROM recettes WHERE id = :id";
+        $stmtDeleteRecette = $this->db->prepare($queryDeleteRecette);
+        $stmtDeleteRecette->bindParam(':id', $id);
+        $stmtDeleteRecette->execute();
+
+        $this->db->commit();
+
+        return $stmtDeleteRecette;
+    } catch (PDOException $e) {
+        $this->db->rollBack();
+        echo "Erreur : " . $e->getMessage();
+        return false;
+    }
 }
+
 
         public function editRecettes()
         {

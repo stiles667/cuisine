@@ -27,7 +27,7 @@
     if (isset($_GET['search'])) {
         $servername = "localhost";
         $username = "root";
-        $password = "1Aqzsedrf!";
+        $password = "Khaled";
         $dbname = "cuisine";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
@@ -38,7 +38,7 @@
         $searchTerm = $conn->real_escape_string($_GET['search']);
 
 
-        $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom
+        $query = "SELECT recettes.id AS recette_id, recettes.nom AS recette_nom, categories.nom AS categorie_nom, recettes.image AS image_url
                   FROM recettes
                   INNER JOIN categories ON recettes.id_categorie = categories.id
                   WHERE recettes.nom LIKE '%$searchTerm%' OR categories.nom LIKE '%$searchTerm%'";
@@ -50,8 +50,17 @@
                 $recetteId = $row["recette_id"];
                 $nomRecette = $row["recette_nom"];
                 $categorieNom = $row["categorie_nom"];
+                $imageUrl = $row["image_url"];
+
+                if (isset($imageUrl)) {
+                    // Affiche la section de recette avec l'image en background
+                    echo '<section class="recette" style="background-image: url(\'' . $imageUrl . '\');">';
+                } else {
+                    // Affiche la section de recette sans image en background
+                    echo '<section class="recette">';
+                }
         ?>
-                <section class="recette">
+                
                     <div class="content">
                         <h2><?= $nomRecette ?></h2>
                         <p>Catégorie : <?= $categorieNom ?></p>
