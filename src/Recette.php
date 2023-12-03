@@ -1,5 +1,5 @@
     <?php
-    //require 'Ingredients.php';
+    require 'Ingredients.php';
 
 class Recette
 {
@@ -36,7 +36,7 @@ class Recette
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
-    public function ajouterRecette()
+    public function ajouterRecette($nom,$image,$difficulte,$temps_preparation,$ustensiles,$etapes_recette,$id_categorie)
 {
     $queryRecette = "INSERT INTO recettes 
                      (nom, image, difficulte, temps_preparation, ustensiles, etapes_recette, id_categorie)
@@ -44,18 +44,14 @@ class Recette
 
     $stmtRecette = $this->db->prepare($queryRecette);
 
-    $this->nom = htmlspecialchars(strip_tags($this->nom));
-    $this->image = htmlspecialchars(strip_tags($this->image));
-    $this->difficulte = htmlspecialchars(strip_tags($this->difficulte));
-    
-    // Vérifiez si le temps de préparation est défini et est un nombre entier
-    $this->temps_preparation = isset($this->temps_preparation) ? intval($this->temps_preparation) : 0;
-    $this->id_categorie = isset($this->id_categorie) ? intval($this->id_categorie) : 1;
-    
-
-    $this->ustensiles = htmlspecialchars(strip_tags($this->ustensiles));
-    $this->etapes_recette = htmlspecialchars(strip_tags($this->etapes_recette));
-    $this->id_categorie = htmlspecialchars(strip_tags($this->id_categorie));
+    $this->nom = htmlspecialchars(strip_tags($nom));
+    $this->image = htmlspecialchars(strip_tags($image));
+    $this->difficulte = htmlspecialchars(strip_tags($difficulte));
+    $this->temps_preparation = htmlspecialchars(strip_tags($temps_preparation));
+    $this->id_categorie = isset($id_categorie) ? intval($id_categorie) : 1;
+    $this->ustensiles = htmlspecialchars(strip_tags($ustensiles));
+    $this->etapes_recette = htmlspecialchars(strip_tags($etapes_recette));
+    $this->id_categorie = htmlspecialchars(strip_tags($id_categorie));
 
     $stmtRecette->bindParam(":nom_recette", $this->nom);
     $stmtRecette->bindParam(":image_recette", $this->image);

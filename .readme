@@ -1,0 +1,3 @@
+composer require --dev phpunit/phpunit pour créer le vendor et les autres fichiers
+.\vendor\bin\phpunit pour lancer les tests
+ATTENTION POUR LANCER LES TESTS ILS FAUT METTRE EN COMMENTAIRE "require 'Ingredients.php';" DANS RECETTE.PHP SINON IL Y A UNE ERREUR. NOUS NE COMPRENONS PAS POURQUOI.
