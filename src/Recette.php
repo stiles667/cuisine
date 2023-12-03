@@ -1,5 +1,5 @@
     <?php
-    //require 'Ingredients.php';
+    require 'Ingredients.php';
 
 class Recette
 {
@@ -192,6 +192,12 @@ public function deleteRecettes($id) {
         $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        public function getAllCategories() {
+            $query = "SELECT id, nom FROM categories";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
      
