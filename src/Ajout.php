@@ -8,10 +8,17 @@ $recette = new Recette($db);
 $ingredientsManager = new Ingredients($db);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $tempsPreparation = isset($_POST['temps_preparation']) ? intval($_POST['temps_preparation']) : 0;
+    $recette->id_categorie = isset($_POST['categorie_recette']) ? intval($_POST['categorie_recette']) : 1;
+
+    if (!ctype_digit($tempsPreparation)) {
+        echo "Le temps de préparation doit être un nombre entier.";
+        return false;
+    }
     $recette->nom = htmlspecialchars(strip_tags($_POST['nom_recette']));
     $recette->image = htmlspecialchars(strip_tags($_POST['image_recette']));
     $recette->difficulte = htmlspecialchars(strip_tags($_POST['difficulte_recette']));
-    $recette->temps_preparation = htmlspecialchars(strip_tags($_POST['temps_preparation']));
+    $recette->temps_preparation = intval($tempsPreparation);
     $recette->ustensiles = htmlspecialchars(strip_tags($_POST['ustensiles_recette']));
     $recette->etapes_recette = htmlspecialchars(strip_tags($_POST['etapes_recette'])); 
     $recette->id_categorie = htmlspecialchars(strip_tags($_POST['categorie_recette']));

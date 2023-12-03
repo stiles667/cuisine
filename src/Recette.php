@@ -47,7 +47,12 @@ class Recette
     $this->nom = htmlspecialchars(strip_tags($this->nom));
     $this->image = htmlspecialchars(strip_tags($this->image));
     $this->difficulte = htmlspecialchars(strip_tags($this->difficulte));
-    $this->temps_preparation = htmlspecialchars(strip_tags($this->temps_preparation));
+    
+    // Vérifiez si le temps de préparation est défini et est un nombre entier
+    $this->temps_preparation = isset($this->temps_preparation) ? intval($this->temps_preparation) : 0;
+    $this->id_categorie = isset($this->id_categorie) ? intval($this->id_categorie) : 1;
+    
+
     $this->ustensiles = htmlspecialchars(strip_tags($this->ustensiles));
     $this->etapes_recette = htmlspecialchars(strip_tags($this->etapes_recette));
     $this->id_categorie = htmlspecialchars(strip_tags($this->id_categorie));
@@ -56,10 +61,6 @@ class Recette
     $stmtRecette->bindParam(":image_recette", $this->image);
     $stmtRecette->bindParam(":difficulte_recette", $this->difficulte);
     $stmtRecette->bindParam(":temps_preparation", $this->temps_preparation);
-    if (!is_numeric($this->temps_preparation)) {
-        echo "Le temps de préparation doit être un nombre entier.";
-        return false;
-    }
     $stmtRecette->bindParam(":ustensiles_recette", $this->ustensiles);
     $stmtRecette->bindParam(":etapes_recette", $this->etapes_recette);
     $stmtRecette->bindParam(":id_categorie", $this->id_categorie); 
@@ -82,6 +83,7 @@ class Recette
 
     return false;
 }
+
 
 public function ajouterIngredient($nom, $quantite, $recetteId)
 {
