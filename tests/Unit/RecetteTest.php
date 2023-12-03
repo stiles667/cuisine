@@ -46,7 +46,7 @@ class RecetteTest extends TestCase
     // Suppression de la recette
     $result = $this->recipeManager->deleteRecettes($recipeId);
 
-    // Vérifiez si la suppression a réussi (1 ligne affectée)
+    // Vérifiez si la suppression a réussi
     $this->assertEquals(1, $result->rowCount());
 
     // Vérifiez si l'ingrédient lié a également été supprimé
