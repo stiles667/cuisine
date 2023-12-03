@@ -18,7 +18,6 @@ $ingredientsManager = new Ingredients($db);
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $tempsPreparation = isset($_POST['temps_preparation']) ? intval($_POST['temps_preparation']) : 0;
     if (isset($_POST['nom'], $_POST['image'], $_POST['difficulte'], $_POST['temps_preparation'], $_POST['ustensiles'], $_POST['id_categorie'])) {
         $recipe->id = $id;
         $recipe->nom = $_POST['nom'];
