@@ -65,7 +65,7 @@
        }
        echo "</table>";
        
-       // Autres éléments de la page
+       
    } else {
        echo "Aucune recette trouvée.";
    }

@@ -115,13 +115,11 @@ public function deleteRecettes($id) {
     try {
         $this->db->beginTransaction();
 
-        // First, handle associated records in recette_ingredient table
         $queryDeleteRecetteIngredient = "DELETE FROM recette_ingredient WHERE recette_id = :id";
         $stmtDeleteRecetteIngredient = $this->db->prepare($queryDeleteRecetteIngredient);
         $stmtDeleteRecetteIngredient->bindParam(':id', $id);
         $stmtDeleteRecetteIngredient->execute();
 
-        // Then, delete the recipe from the recettes table
         $queryDeleteRecette = "DELETE FROM recettes WHERE id = :id";
         $stmtDeleteRecette = $this->db->prepare($queryDeleteRecette);
         $stmtDeleteRecette->bindParam(':id', $id);
