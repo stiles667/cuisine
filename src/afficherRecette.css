@@ -1,0 +1,60 @@
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Style pour le titre de la recette */
+h2 {
+    color: #008080;
+}
+
+/* Style pour les informations de la recette */
+p {
+    color: #666;
+}
+
+/* Style pour la liste des étapes */
+ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+/* Style pour les étapes de la recette */
+li {
+    color: #444;
+}
+
+/* Style pour la liste des ingrédients */
+ul:last-of-type {
+    margin-top: 20px;
+}
+
+/* Style pour les éléments de la liste des ingrédients */
+ul:last-of-type li {
+    color: #555;
+}
+
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+/* Style pour l'en-tête du tableau */
+th {
+    background-color: #008080;
+    color: white;
+    text-align: left;
+    padding: 8px;
+}
+
+/* Style pour les cellules du tableau */
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/* Style pour chaque ligne impaire du tableau */
+tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}

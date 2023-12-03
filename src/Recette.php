@@ -191,6 +191,12 @@ public function deleteRecettes($id) {
 
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
+        public function getAllCategories() {
+            $query = "SELECT id, nom FROM categories";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
 
      
 
