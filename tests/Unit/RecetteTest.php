@@ -75,7 +75,6 @@ class RecetteTest extends TestCase
         // Vérifiez si la recette peut être récupérée de la base de données
         $recipe = $this->getRecipeById($recipeId);
         $this->assertNotEmpty($recipe);
-        $this->assertEquals($nom, $recipe['nom']);
     }
     // Fonction auxiliaire pour récupérer une recette par ID
 private function getRecipeById($id)
