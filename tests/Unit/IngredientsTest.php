@@ -45,7 +45,7 @@ class IngredientsTest extends TestCase
         // Appel de la fonction getIngredientById
         $result = $this->ingredientsManager->getIngredientById($ingredientId);
 
-        // Vérification si l'ingrédient récupéré a le bon ID (par exemple, vérifier le contenu de $result)
+        // Vérification si l'ingrédient récupéré a le bon ID 
         $this->assertEquals($ingredientId, $result['id']);
     }
 

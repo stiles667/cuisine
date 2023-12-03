@@ -48,7 +48,6 @@ class Recette
     $this->image = htmlspecialchars(strip_tags($image));
     $this->difficulte = htmlspecialchars(strip_tags($difficulte));
     $this->temps_preparation = htmlspecialchars(strip_tags($temps_preparation));
-    $this->id_categorie = isset($id_categorie) ? intval($id_categorie) : 1;
     $this->ustensiles = htmlspecialchars(strip_tags($ustensiles));
     $this->etapes_recette = htmlspecialchars(strip_tags($etapes_recette));
     $this->id_categorie = htmlspecialchars(strip_tags($id_categorie));
