@@ -34,25 +34,25 @@ class RecetteTest extends TestCase
 
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
-    // Test de la fonction deleteRecettes
-    // public function testDeleteRecette()
-    // {
-    //     // Insérez une recette pour la supprimer ensuite
-    //     $recipeId = $this->recipeManager->ajouterRecette('Recette de test', 'image_test.jpg', 'Facile', 3, 'Couteau, Planche à découper', 1);
+   
+    public function testDeleteRecette()
+    {
+        // Insérez une recette pour la supprimer ensuite
+        $recipeId = $this->recipeManager->ajouterRecette('Recette de test', 'image_test.jpg', 'Facile', 3, 'Couteau, Planche à découper', 1);
         
-    //     // Insérez un ingrédient lié à la recette
-    //     $ingredientId = $this->ingredientsManager->ajouterIngredient('Salade', 2, $recipeId);
+        // Insérez un ingrédient lié à la recette
+        $ingredientId = $this->ingredientsManager->ajouterIngredient('Salade', 2, $recipeId);
 
-    //     // Suppression de la recette
-    //     $result = $this->recipeManager->deleteRecettes($recipeId);
+        // Suppression de la recette
+        $result = $this->recipeManager->deleteRecettes($recipeId);
 
-    //     // Vérifiez si la suppression a réussi (1 ligne affectée)
-    //     $this->assertEquals(1, $result->rowCount());
+        // Vérifiez si la suppression a réussi (1 ligne affectée)
+        $this->assertEquals(1, $result->rowCount());
 
-    //     // Vérifiez si l'ingrédient lié a également été supprimé
-    //     $ingredient = $this->ingredientsManager->getIngredientById($ingredientId);
-    //     $this->assertFalse($ingredient);
-    // }
+        // Vérifiez si l'ingrédient lié a également été supprimé
+        $ingredient = $this->ingredientsManager->getIngredientById($ingredientId);
+        $this->assertFalse($ingredient);
+    }
 
     // Test de la fonction ajouterRecette
     public function testAjouterRecette()
