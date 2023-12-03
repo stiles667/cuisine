@@ -73,6 +73,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo 'Utensils: <input type="text" name="ustensiles" value="' . $recipeData['ustensiles'] . '"><br>';
             echo 'Category: <input type="text" name="id_categorie" value="' . $recipeData['id_categorie'] . '"><br>';
 
+            $categories = $recipe->getAllCategories();
+
+    echo '<h3>Categories</h3>';
+    echo '<table>';
+    echo '<tr><th>ID</th><th>Name</th></tr>';
+    foreach ($categories as $category) {
+        echo '<tr>';
+        echo '<td>' . $category['id'] . '</td>';
+        echo '<td>' . $category['nom'] . '</td>';
+        echo '</tr>';
+    }
+    echo '</table>';
+
             // Affichez les ingrédients
             // Affichez les ingrédients
             echo '<h2>Ingredients</h2>';
