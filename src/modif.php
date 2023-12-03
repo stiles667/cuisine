@@ -36,13 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($ingredients as $ingredientId => $ingredientData) {
             $idIngredient = $ingredientId;
             $nouvelleQuantite = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
-
-            // Modifiez la quantité dans la table recette_ingredient
-            $ingredientsManager->editQuantiteIngredient($idIngredient, $id, $idIngredient, $nouvelleQuantite);
         }
 
         if ($result) {
             echo 'La recette a été modifiée avec succès.';
+            header("Location: index.php");
         } else {
             echo 'Une erreur s\'est produite lors de la modification de la recette.';
         }
@@ -73,7 +71,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo 'Utensils: <input type="text" name="ustensiles" value="' . $recipeData['ustensiles'] . '"><br>';
             echo 'Category: <input type="text" name="id_categorie" value="' . $recipeData['id_categorie'] . '"><br>';
 
-            // Affichez les ingrédients
+            
+
+            $categories = $recipe->getAllCategories();
+
+            echo '<h3>Categories</h3>';
+            echo '<table>';
+            echo '<tr><th>ID</th><th>Name</th></tr>';
+            foreach ($categories as $category) {
+                echo '<tr>';
+                echo '<td>' . $category['id'] . '</td>';
+                echo '<td>' . $category['nom'] . '</td>';
+                echo '</tr>';
+            }
+            echo '</table>';
+
+
             // Affichez les ingrédients
             echo '<h2>Ingredients</h2>';
             foreach ($ingredients as $ingredient) {
