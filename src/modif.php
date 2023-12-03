@@ -36,13 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($ingredients as $ingredientId => $ingredientData) {
             $idIngredient = $ingredientId;
             $nouvelleQuantite = isset($ingredientData['quantite']) ? $ingredientData['quantite'] : '';
-
-            // Modifiez la quantité dans la table recette_ingredient
-            $ingredientsManager->editQuantiteIngredient($idIngredient, $id, $idIngredient, $nouvelleQuantite);
         }
 
         if ($result) {
             echo 'La recette a été modifiée avec succès.';
+            header("Location: index.php");
         } else {
             echo 'Une erreur s\'est produite lors de la modification de la recette.';
         }
